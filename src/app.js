@@ -17,4 +17,19 @@ app.config(function($stateProvider, $urlRouterProvider) {
       controller: "SignupController",
       url: '/register'
     })
+	.state('find-club', {
+      templateUrl: 'src/views/header/find-club.html',
+      controller: "FindClubController",
+      url: '/find-club'
+    })
+	.state('need-help', {
+      templateUrl: 'src/views/header/need-help.html',
+      controller: "NeedHelpController",
+      url: '/need-help'
+    })
+	.state('my-toastmasters', {
+      templateUrl: 'src/views/header/my-toastmasters.html',
+      controller: "MyToastmastersController",
+      url: '/my-toastmasters'
+    })
   });

@@ -11,3 +11,12 @@ app.controller('LoginController',function($scope,$rootScope){
 app.controller('SignupController',function($scope,$rootScope){
 
 });
+app.controller('FindClubController',function($scope,$rootScope){
+
+});
+app.controller('MyToastmastersController',function($scope,$rootScope){
+
+});
+app.controller('NeedHelpController',function($scope,$rootScope){
+
+});
