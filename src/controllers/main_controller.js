@@ -3,6 +3,7 @@ app.controller('MainController',function($scope,$rootScope){
     function(event) {
       $(document).trigger("TemplateLoaded");
   });
+  $rootScope.cssfile = 'style';
 });
 app.controller('LoginController',function($scope,$rootScope){
 

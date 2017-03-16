@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="toast-master">
+<html lang="en" ng-app="toast-master" ng-controller="MainController">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
   	<link rel="stylesheet" href="css/head-style.css">
-  	<link rel="stylesheet" href="css/style.css">
+  	<link rel="stylesheet" ng-href="css/{{cssfile}}.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
 
@@ -29,7 +29,7 @@
     <script src="src/controllers/home/home_controller.js"></script>
 
 </head>
-<body ng-controller="MainController">
+<body>
   <div ng-include="'src/views/header/header.html'"></div>
   <div ui-view></div>
   <div ng-include="'src/views/footer/footer.html'"></div>

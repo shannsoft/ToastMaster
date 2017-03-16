@@ -631,6 +631,13 @@ a:hover{ color:#000;}
 .footer-section{
 	background:#212121;
 	color:#fff;
+    background: -moz-linear-gradient(left,  #212121 0%, #212121 62%, #00aed9 62%, #00aed9 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#212121), color-stop(62%,#212121), color-stop(62%,#00aed9), color-stop(100%,#00aed9)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  #212121 0%,#212121 62%,#00aed9 62%,#00aed9 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  #212121 0%,#212121 62%,#00aed9 62%,#00aed9 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  #212121 0%,#212121 62%,#00aed9 62%,#00aed9 100%); /* IE10+ */
+    background: linear-gradient(to right,  #212121 0%,#212121 62%,#00aed9 62%,#00aed9 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#212121', endColorstr='#00aed9',GradientType=1 ); /* IE6-9 */
 }
 .footer-section .ftr-block-list{
 	display:block;
@@ -654,11 +661,18 @@ a:hover{ color:#000;}
 }
 .ftr-copyright{
 	background:#111;
+	    background: -moz-linear-gradient(left,  #111111 0%, #111111 62%, #00a3cc 62%, #00a3cc 80%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#111111), color-stop(62%,#111111), color-stop(62%,#00a3cc), color-stop(80%,#00a3cc)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  #111111 0%,#111111 62%,#00a3cc 62%,#00a3cc 80%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  #111111 0%,#111111 62%,#00a3cc 62%,#00a3cc 80%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  #111111 0%,#111111 62%,#00a3cc 62%,#00a3cc 80%); /* IE10+ */
+    background: linear-gradient(to right,  #111111 0%,#111111 62%,#00a3cc 62%,#00a3cc 80%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#00a3cc',GradientType=1 ); /* IE6-9 */
 	padding:10px 0px;
 	margin-top:50px;
 	color:#cecece;
 	font-size:14px;
-	border-bottom: 2px solid #00aed9;
+	border-bottom: 4px solid #00a3cc;
 }
 .ftr-social {
   margin:0px;
@@ -763,17 +777,3 @@ a:hover{ color:#000;}
 	width:100px;
 	margin:20px 0px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
