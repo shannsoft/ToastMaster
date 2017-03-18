@@ -240,10 +240,12 @@
 	font-size:12px;
 	color:#9c9c9c;
 }
+
 .affix .navbar-header .navbar-brand img {
-  -webkit-transform: scale(0.7);
-  -moz-transform: scale(0.7);
-  -o-transform: scale(0.7);
-  transform: scale(0.7);
-  margin-top:19px;
+    -webkit-transform: scale(0.7);
+    -moz-transform: scale(0.7);
+    -o-transform: scale(0.7);
+    transform: scale(0.7);
+    margin-top: 19px;
+	margin-left: -22px;
 }

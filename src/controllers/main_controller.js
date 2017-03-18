@@ -4,12 +4,11 @@ app.controller('MainController',function($scope,$rootScope,$localStorage){
       $(document).trigger("TemplateLoaded");
   });
 });
-app.controller('LoginController',function($scope,$rootScope,$localStorage,$window,UserService){
+app.controller('LoginController',function($scope,$rootScope,$localStorage,$window,UserService,$state){
   $scope.login = function(){
     UserService.login($scope.user).then(function(response){
-      console.log("response",response);
       if(response.data.StatusCode == 200){
-        $state.go(admin.dashboard);
+        $state.go('admin.dashboard');
       }
     })
   }

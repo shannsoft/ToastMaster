@@ -645,6 +645,7 @@ a:hover{ color:#000;}
     background: linear-gradient(to right,  #212121 0%,#212121 62%,#00aed9 62%,#00aed9 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#212121', endColorstr='#00aed9',GradientType=1 ); /* IE6-9 */
 }
+
 .footer-section .ftr-block-list{
 	display:block;
 	margin-bottom:20px;
@@ -783,3 +784,85 @@ a:hover{ color:#000;}
 	width:100px;
 	margin:20px 0px;
 }
+.location-details{
+	background:#f5f5f5;
+	padding:30px 20px;
+	display:block;
+}
+.location-details h4{
+	margin:0px 0px 20px;
+	padding:0px;
+	text-transform:uppercase;
+	font-weight:bold;
+	font-size:16px;
+	color:#555;
+}
+
+.location-details hr{
+	border-color:#ddd;
+}
+.location-details ul{
+	margin:0px;
+	padding:0px;
+}
+.location-details ul li{
+	list-style:none;
+	display:block;
+}
+.location-details ul li i{
+	margin-right:8px;
+	color:#00aed9;
+}
+.search-result-details{
+    display: block;
+    height: 360px;
+    overflow: auto;
+}
+.search-result-details .location-wrap{
+	display: block;
+    background: #fff;
+    padding: 15px;
+	margin-bottom:5px;
+	color:#555;
+}
+
+.search-result-details .location-wrap h3{
+    margin: 0px;
+    padding: 0px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.search-result-details .location-wrap h4{
+    margin:5px 0px;
+    padding: 0px;
+    font-size: 18px;
+	text-transform:none;
+}
+.search-result-details .location-wrap p{
+	margin:0px;
+	padding:0px;
+}
+.ftr-social-icon{
+	display:block;
+}
+.ftr-social-icon li{
+	display:inline-block;
+	font-size:15px;
+	font-weight:bold;
+	color:#000;
+	padding:5px 5px;
+}
+.ftr-social-icon li a{
+	font-size:15px;
+	color:#fff;
+}
+
+
+
+
+
+
+
+
+
+
