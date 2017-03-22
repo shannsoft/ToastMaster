@@ -26,12 +26,25 @@
     <script src="src/app.js"></script>
     <script src="src/controllers/main_controller.js"></script>
     <script src="src/controllers/home/home_controller.js"></script>
+
+    <script src="src/services/common-service.js"></script>
     <script src="src/services/authontication/auth-service.js"></script>
 
 </head>
-<body>
+<body ng-init="checkLoginUser()">
   <div ng-include="'src/views/header/header.html'" ng-if="!is_admin"></div>
   <div ui-view></div>
   <div ng-include="'src/views/footer/footer.html'" ng-if="!is_admin"></div>
+
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAyPOEsucm0X1kbw1HVmE-fEOa2ArhupZg&libraries=places&callback=initGoogle" async defer></script>
+  <script type="text/javascript">
+    initGoogle = function() {
+      function inithandler() {
+        isGoogleLoaded = true;
+      }
+      google.maps.event.addDomListener(window, 'load', inithandler);
+    }
+  </script>
 </body>
+
 </html>
