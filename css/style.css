@@ -950,3 +950,7 @@ a:hover{ color:#000;}
 .color-red{
 	color:#ff0000;
 }
+#map {
+  height: 510px;
+  width: 100%;
+}

@@ -22,6 +22,10 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       controller: "AuthorizeController",
       url: '/club-registration'
     })
+    .state('club-success', {
+      templateUrl: 'src/views/header/club-success.html',
+      url: '/club-success'
+    })
     .state('find-club', {
       templateUrl: 'src/views/header/find-club.html',
       url: '/find-club',
@@ -207,9 +211,12 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     })
   }
 }]);
-;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService){
+;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", "$timeout", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout){
   $scope.user = {};
-  $scope.club = {};
+  google = typeof google === 'undefined' ? "" : google;
+  var googleTime;
+  var geocoder;
+  var map;
   $scope.initLogin = function(){
     if($localStorage.user){
       $scope.user.username = $localStorage.user.uname;
@@ -234,9 +241,71 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     })
   }
   $scope.getCountryList = function(){
+    $scope.club = {};
     UserService.getCountryList().then(function(response){
       $scope.countryList = response.data.Data;
     })
+    $scope.loadMap();
+  }
+  $scope.loadMap = function(){
+    if(google == "" || !google.maps || !google.maps.places)
+        googleTime = $timeout($scope.loadMap , 3000);
+    else {
+      clearTimeout(googleTime);
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            console.log(position);
+            geocoder = new google.maps.Geocoder();
+            $scope.getLocationDetails(pos);
+            map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 12,
+              center: pos
+            });
+            var marker = new google.maps.Marker({
+              position: pos,
+              draggable:true,
+              map: map
+            });
+          });
+        }
+    }
+  }
+  $scope.getLocationDetails = function(pos){
+      var latLng = new google.maps.LatLng(pos.lat, pos.lng);
+      $scope.obj = $scope.club;
+      if (geocoder) {
+        geocoder.geocode({ 'latLng': latLng}, function (results, status) {
+           if (status == google.maps.GeocoderStatus.OK) {
+             var address_components = results[0].address_components;
+             for(var i = 0; i < address_components.length; i++) {
+                 var types = address_components[i].types;
+                    console.log(address_components[i]);
+                 if(types[0] == 'postal_code') {
+                    $scope.club.pin = address_components[i].long_name;
+                 } else if (types[0] == 'administrative_area_level_1' ) {
+                   $scope.obj.state = address_components[i].long_name;
+                 } else if(types[0] == 'locality') {
+                    $scope.obj.cityName = address_components[i].long_name;
+                 }
+                 else if(types[0] == 'political') {
+                    $scope.obj.loc_add = address_components[i].long_name;
+                 } else if(types[0] == 'premise') {
+                    $scope.obj.loc_plot = address_components[i].long_name;
+                 }
+             }
+           }
+           else {
+            console.log("Geocoding failed: " + status);
+           }
+        });
+      }
+      $timeout(function () {
+      }, 1000);
+
   }
   $scope.clubRegister = function(){
     $rootScope.showPreloader = true;
@@ -249,7 +318,9 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     $scope.club.pin = parseInt($scope.club.pin);
     UserService.clubRegistration($scope.club).then(function(response){
       $rootScope.showPreloader = false;
-      console.log(response);
+      if(response.data.StatusCode == 200)
+        $state.go('club-success');
+        console.log(response);
     })
   }
 }]);

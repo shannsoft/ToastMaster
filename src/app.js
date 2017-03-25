@@ -20,6 +20,10 @@ app.config(function($stateProvider, $urlRouterProvider) {
       controller: "AuthorizeController",
       url: '/club-registration'
     })
+    .state('club-success', {
+      templateUrl: 'src/views/header/club-success.html',
+      url: '/club-success'
+    })
     .state('find-club', {
       templateUrl: 'src/views/header/find-club.html',
       url: '/find-club',
