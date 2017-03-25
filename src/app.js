@@ -9,7 +9,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     })
     .state('login', {
       templateUrl: 'src/views/header/login.html',
-      controller: "LoginController",
+      controller: "AuthorizeController",
       url: '/login',
       resolve: {
           loggedin: checkLoggedin
@@ -17,8 +17,20 @@ app.config(function($stateProvider, $urlRouterProvider) {
     })
     .state('club-registration', {
       templateUrl: 'src/views/header/club-registration.html',
-      controller: "SignupController",
+      controller: "AuthorizeController",
       url: '/club-registration'
+    })
+    .state('find-club', {
+      templateUrl: 'src/views/header/find-club.html',
+      url: '/find-club',
+    })
+  	.state('need-help', {
+      templateUrl: 'src/views/header/need-help.html',
+      url: '/need-help'
+    })
+  	.state('my-toastmasters', {
+      templateUrl: 'src/views/header/my-toastmasters.html',
+      url: '/my-toastmasters'
     })
     .state('admin', {
         url: '/admin',
@@ -41,27 +53,34 @@ app.config(function($stateProvider, $urlRouterProvider) {
           loggedout: checkLoggedout
       }
     })
-    .state('find-club', {
-      templateUrl: 'src/views/header/find-club.html',
-      controller: "FindClubController",
-      url: '/find-club',
+    .state('admin.approval-request', {
+      url: '/approval-request',
+      templateUrl: 'admin/superAdmin/approval-request.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
     })
-  	.state('need-help', {
-      templateUrl: 'src/views/header/need-help.html',
-      controller: "NeedHelpController",
-      url: '/need-help'
+    .state('admin.club-list', {
+      url: '/club-list',
+      templateUrl: 'admin/superAdmin/club-list.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
     })
-  	.state('my-toastmasters', {
-      templateUrl: 'src/views/header/my-toastmasters.html',
-      controller: "MyToastmastersController",
-      url: '/my-toastmasters'
+    .state('admin.club', {
+      url: '/club/:profileName',
+      templateUrl: 'admin/superAdmin/clubDetails.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
     })
-
 
     function checkLoggedout($q, $timeout, $http, $location, $rootScope, $state, $localStorage) {
         var deferred = $q.defer();
         $timeout(function(){
-          console.log($localStorage.loggedInUser);
           if($localStorage.loggedInUser){
             deferred.resolve();
           }

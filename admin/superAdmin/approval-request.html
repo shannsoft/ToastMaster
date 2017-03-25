@@ -1,0 +1,84 @@
+<div class="pageheader">
+  <h2><i class="fa fa-home"></i> Approval Request <span>Subtitle goes here...</span></h2>
+</div>
+<div class="contentpanel" ng-init="loadUserList()">
+  <ul class="letter-list">
+    <li><a href="#">a</a></li>
+    <li><a href="#">b</a></li>
+    <li><a href="#">c</a></li>
+    <li><a href="#">d</a></li>
+    <li><a href="#">e</a></li>
+    <li><a href="#">f</a></li>
+    <li><a href="#">g</a></li>
+    <li><a href="#">h</a></li>
+    <li><a href="#">i</a></li>
+    <li><a href="#">j</a></li>
+    <li><a href="#">k</a></li>
+    <li><a href="#">l</a></li>
+    <li><a href="#">m</a></li>
+    <li><a href="#">n</a></li>
+    <li><a href="#">o</a></li>
+    <li><a href="#">p</a></li>
+    <li><a href="#">q</a></li>
+    <li><a href="#">r</a></li>
+    <li><a href="#">s</a></li>
+    <li><a href="#">t</a></li>
+    <li><a href="#">u</a></li>
+    <li><a href="#">v</a></li>
+    <li><a href="#">w</a></li>
+    <li><a href="#">x</a></li>
+    <li><a href="#">y</a></li>
+    <li><a href="#">z</a></li>
+  </ul>
+  <div class="mb30"></div>
+  <div class="panel panel-default" ng-repeat="club in clubList" ng-if="!club.isApproved">
+    <div class="panel-body ar-wrap">
+      <h3>{{club.fName+' '+club.lName}}</h3>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="ar-block">
+            <p>Email</p>
+            <span>{{club.email}}</span>
+          </div>
+          <div class="ar-block">
+            <p>Phone</p>
+            <span>{{club.phone}}</span>
+          </div>
+          <div class="ar-block">
+            <p>Address</p>
+            <span>{{club.address}}<br>
+            {{club.cityName}}, {{club.state}}, {{club.country}}, {{club.pin}}<br></span>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="ar-block">
+            <p>Club Country</p>
+            <span>{{club.countryName}}</span>
+          </div>
+          <div class="ar-block">
+            <p>Sponsering Organization</p>
+            <strong>Teknobiz</strong> : <span><a href="#" target="_blank">www.teknobiz.in</a></span>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="ar-block">
+            <p>Comments :</p>
+            <span>{{club.comment}}</span>
+          </div>
+          <div class="ar-block">
+            <button class="btn btn-black mr5">Approve</button>
+            <button class="btn btn-danger">Reject</button>
+          </div>
+        </div>
+        <!-- <div class="col-sm-12 text-center">
+          <div class="alert alert-success">
+            <strong>Well done!</strong> You successfully read this <a href="#" class="alert-link">important alert message</a>.
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="text-center">
+  <button class="btn btn-white">Load More</button>
+  </div>
+</div>

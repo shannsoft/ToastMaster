@@ -12,6 +12,7 @@
 
     <script src="js/jquery-1.11.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/moment.js"></script>
     <script src="js/theme.js"></script>
 
 
@@ -23,15 +24,20 @@
 
 
     <!-- Custom javascript files -->
-    <script src="src/app.js"></script>
+
+    <script src="custom.js?rel=1490417063309"></script>
+    <!-- <script src="src/app.js"></script>
     <script src="src/controllers/main_controller.js"></script>
     <script src="src/controllers/home/home_controller.js"></script>
 
     <script src="src/services/common-service.js"></script>
-    <script src="src/services/authontication/auth-service.js"></script>
+    <script src="src/services/authontication/auth-service.js"></script> -->
 
 </head>
 <body ng-init="checkLoginUser()">
+  <div id="preloader" ng-if="showPreloader">
+      <div id="status"><i class="fa fa-spinner fa-spin"></i></div>
+  </div>
   <div ng-include="'src/views/header/header.html'" ng-if="!is_admin"></div>
   <div ui-view></div>
   <div ng-include="'src/views/footer/footer.html'" ng-if="!is_admin"></div>

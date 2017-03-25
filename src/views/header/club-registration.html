@@ -7,57 +7,143 @@
 		</div>
 	</div>
 </section>
-<section class="page-section page-background padd-v-60">
+<section class="page-section page-background padd-v-60" ng-init="getCountryList()">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-7 col-sm-offset-3">
-				<form class="reg-page">
-						<div class="reg-header">
-							<h2>Start a Club</h2>
-							<p>Yes! I would like to be contacted about starting a Toastmaster club in my area.</p>
-						</div>
-					<div class="form-group">
-						<label>First Name</label>
-						<input type="text" class="form-control">
+			<div class="col-md-6">
+				<form class="reg-page" name="reg_from">
+					<div class="reg-header">
+						<h2>Start a Club</h2>
+						<p>Yes! I would like to be contacted about starting a Toastmaster club in my area.</p>
 					</div>
-					<div class="form-group">
-						<label>Last Name</label>
-						<input type="text" class="form-control ">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>First Name <span class="color-red">*</span></label>
+								<input type="text" class="form-control b-a h-40" name="firstName" ng-model="club.fName" placeholder="First Name" required>
+								<span class="color-red" ng-if="reg_from.firstName.$touched && reg_from.firstName.$error.required">First name should not be blank</span>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Last Name <span class="color-red">*</span></label>
+								<input type="text" class="form-control" name="lastName" ng-model="club.lName" placeholder="Last Name" required>
+								<span class="color-red" ng-if="reg_from.lastName.$touched && reg_from.lastName.$error.required">Last name should not be blank</span>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<label>Email Address <span class="color-red">*</span></label>
-						<input type="text" class="form-control">
+						<input type="text" class="form-control" name="email" ng-model="club.email" placeholder="Email" required>
+						<span class="color-red" ng-show="reg_from.email.$touched && reg_from.email.$invalid">Please enter email</span>
 					</div>
-
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label>Password <span class="color-red">*</span></label>
-									<input type="password" class="form-control">
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label>Confirm Password <span class="color-red">*</span></label>
-									<input type="password" class="form-control">
-								</div>
+					<div class="form-group">
+						<label>Mobile</label>
+						<input type="text" class="form-control" name="mobile" placeholder="Mobile" ng-model="club.phone">
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Street Address</label>
+								<input type="text" class="form-control" placeholder="Street Address" ng-model="club.address">
 							</div>
 						</div>
-
-						<hr>
-
-						<div class="row">
-							<div class="col-lg-6">
-								<div class="checkbox check-primary">
-									<input type="checkbox" value="1" id="checkbox1">
-									<label for="checkbox1">I read <a href="#" class="color-green">Terms and Conditions</a></label>
-								</div>
-							</div>
-							<div class="col-lg-6 text-right">
-								<button class="btn btn-blue" type="submit">Register</button>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>City <span class="color-red">*</span></label>
+								<input type="text" name="cityName" class="form-control" placeholder="City" ng-model="club.cityName" required>
+								<span class="color-red" ng-show="reg_from.cityName.$touched && reg_from.cityName.$invalid">Please enter city name</span>
 							</div>
 						</div>
-					</form>
+					</div>
+					<div class="form-group">
+						<label>State <span class="color-red">*</span></label>
+						<input type="text" class="form-control" name="state" placeholder="State" ng-model="club.state" required>
+						<span class="color-red" ng-show="reg_from.state.$touched && reg_from.state.$invalid">Please enter state name</span>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Country <span class="color-red">*</span></label>
+								<select class="form-control" name="" ng-model="club.country">
+									<option value="">Select Country</option>
+									<option value="{{co.id}}" ng-repeat="co in countryList">{{co.name}}</option>
+								</select>
+								<!-- <input type="text" name="country" class="" placeholder="Country"  required>
+								<span class="color-red" ng-show="reg_from.country.$touched && reg_from.country.$invalid">Please enter country name</span> -->
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Zip Code <span class="color-red">*</span></label>
+								<input type="text" name="pin" class="form-control" placeholder="Zip Code" ng-model="club.pin" required>
+								<span class="color-red" ng-show="reg_from.pin.$touched && reg_from.pin.$invalid">Please enter zip code</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label style="display:block">Will the Club have a Sponsoring Organization?</label>
+						<div class="radio radio-black">
+								<div class="pull-left">
+									<input type="radio" value="one" name="optionyes" id="one">
+									<label for="one">Yes</label>
+								</div>
+								<div class="inline">
+									<input type="radio" checked="checked" value="two" name="optionyes" id="two">
+									<label for="two">No</label>
+								</div>
+							</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Password <span class="color-red">*</span></label>
+								<input type="password" name="password" class="form-control" placeholder="Password" ng-model="club.pwd" required>
+								<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Please create a password</span>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Confirm Password <span class="color-red">*</span></label>
+								<input type="password" name="cpass" class="form-control" placeholder="Confirm Password" ng-model="clubhh.cpass" required>
+								<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Password didn't match</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Company Name</label>
+									<input type="text" name="companyName" placeholder="Confirm Password" ng-model="club.sponsoringCompanyName" class="form-control">
+								</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Company Web Site/URL</label>
+								<input type="text" name="companyURL" class="form-control" placeholder="Company web site" ng-model="club.sponsoringCompanyURL">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Comments</label>
+						<textarea class="form-control" name="comments" placeholder="Comments" ng-model="club.comment"></textarea>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="checkbox check-primary">
+								<input type="checkbox" value="1" id="checkbox1">
+								<label for="checkbox1">I read <a href="#" class="color-green">Terms and Conditions</a></label>
+							</div>
+						</div>
+						<div class="col-lg-6 text-right">
+							<button class="btn btn-blue" type="submit" ng-click="clubRegister()">Register</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-sm-6">
+					<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14969.21271310986!2d85.84350465!3d20.287714299999998!3m2!1i1024!2i768!4f13.1!4m3!3e4!4m0!4m0!5e0!3m2!1sen!2sin!4v1489157827519" width="100%" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>
 			</div>
 
 		</div>
