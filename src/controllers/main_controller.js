@@ -27,6 +27,7 @@ app.controller('MainController',function($scope,$rootScope,$localStorage,UserSer
     UserService.logout().then(function(response){
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){
+        $scope.signedView = false;
         delete $localStorage.loggedInUser;
         $state.go('home');
       }

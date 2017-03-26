@@ -2,11 +2,26 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12">
-				<ul class="nav nav-pills">
+				<ul class="nav nav-pills headermenu">
 				<li><a href="" ui-sref="club-registration">Start a Club</a></li>
 					<li class="hidden-xs"><a href="" ui-sref="find-club">Find a Club</a></li>
 					<li class="hidden-xs"><a href="" ui-sref="need-help">Need Help</a></li>
-					<li><a href="" ui-sref="login">Login</a></li>
+					<li ng-if="!signedView"><a href="" ui-sref="login">Login</a></li>
+					<li ng-if="signedView">
+						<div class="btn-group">
+						  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							<img ng-src="{{loggedIn_user.photo}}" alt="">
+								{{loggedIn_user.fName+' '+loggedIn_user.lName}}
+							<span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu dropdown-menu-usermenu">
+							<li><a href="" ui-sref="admin.myProfile"><i class="fa fa-user"></i> My Profile</a></li>
+							<li><a href="#"><i class="fa fa-cog"></i> Account Settings</a></li>
+							<li><a href="#"><i class="fa fa-info-circle"></i> Help</a></li>
+							<li><a href="" ng-click="logout()"><i class="fa fa-sign-out"></i> Log Out</a></li>
+						  </ul>
+						</div>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -39,7 +54,7 @@
 				</li>
 				<li><a href="#">My Toastmasters</a></li>
 			</ul>
-			                                   
+
 		</div>
 	</div>
 </nav>
