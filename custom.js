@@ -260,7 +260,8 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
             };
             console.log(position);
             geocoder = new google.maps.Geocoder();
-            $scope.getLocationDetails(pos);
+            var latLng = new google.maps.LatLng(pos.lat, pos.lng);
+            $scope.getLocationDetails(latLng);
             map = new google.maps.Map(document.getElementById('map'), {
               zoom: 12,
               center: pos
@@ -270,33 +271,43 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
               draggable:true,
               map: map
             });
+            google.maps.event.addListener(marker, 'dragend', function() {
+              console.log(marker.getPosition());
+              $scope.getLocationDetails(marker.getPosition());
+            });
           });
         }
     }
   }
-  $scope.getLocationDetails = function(pos){
-      var latLng = new google.maps.LatLng(pos.lat, pos.lng);
-      $scope.obj = $scope.club;
+  $scope.getLocationDetails = function(latLng){
+      $scope.obj = {};
+      $scope.club.lattitude = latLng.lat();
+      $scope.club.longitude = latLng.lng();
+      $scope.obj.latlng = $scope.club.lattitude+', '+$scope.club.longitude;
+      console.log(latLng.lat());
+      console.log(latLng.lng());
       if (geocoder) {
         geocoder.geocode({ 'latLng': latLng}, function (results, status) {
            if (status == google.maps.GeocoderStatus.OK) {
-             var address_components = results[0].address_components;
-             for(var i = 0; i < address_components.length; i++) {
-                 var types = address_components[i].types;
-                    console.log(address_components[i]);
-                 if(types[0] == 'postal_code') {
-                    $scope.club.pin = address_components[i].long_name;
-                 } else if (types[0] == 'administrative_area_level_1' ) {
-                   $scope.obj.state = address_components[i].long_name;
-                 } else if(types[0] == 'locality') {
-                    $scope.obj.cityName = address_components[i].long_name;
-                 }
-                 else if(types[0] == 'political') {
-                    $scope.obj.loc_add = address_components[i].long_name;
-                 } else if(types[0] == 'premise') {
-                    $scope.obj.loc_plot = address_components[i].long_name;
-                 }
-             }
+             console.log(results);
+             if (results[1]) {
+    					for (var i = 0; i < results.length; i++) {
+    						if (results[i].types[0] == "locality") {
+    							$scope.obj.city = results[i].address_components[0].long_name;
+    							$scope.obj.state = results[i].address_components[2].long_name;
+    						}
+    						else if (results[i].types[0] == "political") {
+    							$scope.obj.street = results[i].address_components[0].long_name;
+    						}
+    						else if (results[i].types[0] == "postal_code") {
+    							$scope.obj.postal_code = results[i].address_components[0].long_name;
+    							$scope.club.pin = results[i].address_components[0].long_name;
+    						}
+    						else if (results[i].types[0] == "street_address") {
+    							$scope.obj.street_code = results[i].address_components[0].long_name;
+    						}
+    					}
+    				}
            }
            else {
             console.log("Geocoding failed: " + status);
@@ -304,6 +315,9 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
         });
       }
       $timeout(function () {
+        $scope.club.pin = $scope.obj.postal_code;
+        $scope.club.state = $scope.obj.state;
+        $scope.club.cityName = $scope.obj.city;
       }, 1000);
 
   }
@@ -313,8 +327,6 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     $scope.club.actType = "I";
     $scope.club.userid = $scope.club.email;
     $scope.club.joinType = 2;
-    $scope.club.lattitude = 18.1561;
-    $scope.club.longitude = -18.1561;
     $scope.club.pin = parseInt($scope.club.pin);
     UserService.clubRegistration($scope.club).then(function(response){
       $rootScope.showPreloader = false;
