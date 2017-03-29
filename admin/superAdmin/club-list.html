@@ -34,17 +34,17 @@
     <div class="mb30"></div>
     <div class="people-list">
       <div class="row">
-        <div class="col-md-6" ng-repeat="club in clubList" ng-if="!club.isApproved">
+        <div class="col-md-6" ng-repeat="club in clubList" ng-if="club.isApproved">
           <div class="people-item">
             <div class="media">
-              <a href="#" class="pull-left">
+              <a href="" class="pull-left">
                 <img alt="" ng-src="{{club.photo}}" class="thumbnail media-object">
               </a>
               <div class="media-body">
                 <h4 class="person-name">{{club.fName+' '+club.lName}}</h4>
                 <div class="text-muted">Club Number: {{club.userCode}} </div>
                 <div class="text-muted">Registration Date: {{club.regdDate | dateformat}}</div>
-                <a class="btn btn-primary mt10">View Details</a>
+                <a class="btn btn-primary mt10" ui-sref="admin.club({profileid:'{{club.userCode}}'})">View Details</a>
               </div>
             </div>
           </div>

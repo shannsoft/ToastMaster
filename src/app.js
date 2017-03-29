@@ -74,7 +74,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     })
     .state('admin.club', {
-      url: '/club/:profileName',
+      url: '/club/:profileid',
       templateUrl: 'admin/superAdmin/clubDetails.html',
       controller : 'UserDetailsController',
       resolve: {

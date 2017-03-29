@@ -5,3 +5,18 @@ app.filter('dateformat', function(){
     }
   }
 })
+app.filter('startsWith', function () {
+  return function (items,letter) {
+    if(items){
+      var filtered = [];
+      var letterMatch = new RegExp(letter, 'i');
+      angular.forEach(items,function(item){
+        if(item)
+          if (letterMatch.test(item.fName.substring(0, 1))) {
+            filtered.push(item);
+          }
+      })
+      return filtered;
+    }
+  };
+});

@@ -76,7 +76,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       }
     })
     .state('admin.club', {
-      url: '/club/:profileName',
+      url: '/club/:profileid',
       templateUrl: 'admin/superAdmin/clubDetails.html',
       controller : 'UserDetailsController',
       resolve: {
@@ -150,27 +150,31 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       }
   }
 }]);
-;app.controller('UserDetailsController',["$scope", "$rootScope", "$localStorage", "$sce", "$timeout", "AdminService", function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService){
+;app.controller('UserDetailsController',["$scope", "$rootScope", "$localStorage", "$sce", "$timeout", "AdminService", "$stateParams", function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService,$stateParams){
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
-  $scope.loadUserDetails = function () {
+  $scope.locationOnMap = function(lattitude,longitude){
+    clearTimeout(googleTime);
+    if(document.getElementById('map')){
+      var myLatLng = {lat: parseFloat(lattitude), lng: parseFloat(longitude)};
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: myLatLng
+      });
+
+      var location = new google.maps.Marker({
+        position: myLatLng,
+        draggable:false,
+        map: map
+      });
+    }
+  }
+  $scope.loadProfileDetails = function () {
     var details = $localStorage.loggedInUser;
     if(google == "" || !google.maps || !google.maps.places)
         googleTime = $timeout($scope.loadUserDetails , 3000);
     else {
-      clearTimeout(googleTime);
-      if(document.getElementById('map')){
-        var myLatLng = {lat: parseFloat(details.lattitude), lng: parseFloat(details.longitude)};
-        map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 12,
-          center: myLatLng
-        });
-
-        var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map
-        });
-      }
+      $scope.locationOnMap(details.lattitude, details.longitude);
     }
   }
   $scope.loadUserList  = function(){
@@ -180,6 +184,33 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       if(response.data.StatusCode == 200)
         $scope.clubList = response.data.Data;
     })
+  }
+  $scope.clubApproval  = function(option,id){
+    $rootScope.showPreloader = true;
+    var obj = {
+      "actType"  : option,
+      "userCode" : id
+    }
+    AdminService.clubApproval(obj).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200)
+        $scope.loadUserList();
+    })
+  }
+  $scope.loadUserDetails = function () {
+    $rootScope.showPreloader = true;
+    var user_id = $stateParams.profileid;
+    AdminService.getUserDetails(user_id).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200)
+        $scope.userDetails = response.data.Data[0];
+        if(google == "" || !google.maps || !google.maps.places)
+            googleTime = $timeout($scope.loadUserDetails , 3000);
+        else {
+          $scope.locationOnMap($scope.userDetails.lattitude, $scope.userDetails.longitude);
+        }
+    })
+
   }
 }]);
 ;app.controller("HomeController",["$scope", function($scope){
@@ -212,7 +243,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     })
   }
 }]);
-;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", "$timeout", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout){
+;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", "$timeout", "Util", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util){
   $scope.user = {};
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
@@ -259,7 +290,6 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
-            console.log(position);
             geocoder = new google.maps.Geocoder();
             var latLng = new google.maps.LatLng(pos.lat, pos.lng);
             $scope.getLocationDetails(latLng);
@@ -273,7 +303,6 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
               map: map
             });
             google.maps.event.addListener(marker, 'dragend', function() {
-              console.log(marker.getPosition());
               $scope.getLocationDetails(marker.getPosition());
             });
           });
@@ -285,12 +314,9 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       $scope.club.lattitude = latLng.lat();
       $scope.club.longitude = latLng.lng();
       $scope.obj.latlng = $scope.club.lattitude+', '+$scope.club.longitude;
-      console.log(latLng.lat());
-      console.log(latLng.lng());
       if (geocoder) {
         geocoder.geocode({ 'latLng': latLng}, function (results, status) {
            if (status == google.maps.GeocoderStatus.OK) {
-             console.log(results);
              if (results[1]) {
     					for (var i = 0; i < results.length; i++) {
     						if (results[i].types[0] == "locality") {
@@ -331,9 +357,12 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     $scope.club.pin = parseInt($scope.club.pin);
     UserService.clubRegistration($scope.club).then(function(response){
       $rootScope.showPreloader = false;
-      if(response.data.StatusCode == 200)
+      if(response.data.StatusCode == 200){
         $state.go('club-success');
-        console.log(response);
+      }
+      if(response.data.StatusCode == 100){
+        Util.alertMessage('danger',response.data.Message);
+      }
     })
   }
 }]);
@@ -344,12 +373,44 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     }
   }
 })
+app.filter('startsWith', function () {
+  return function (items,letter) {
+    if(items){
+      var filtered = [];
+      var letterMatch = new RegExp(letter, 'i');
+      angular.forEach(items,function(item){
+        if(item)
+          if (letterMatch.test(item.fName.substring(0, 1))) {
+            filtered.push(item);
+          }
+      })
+      return filtered;
+    }
+  };
+});
 ;app.factory("AdminService", ["$http", "$q", "$localStorage", "CONFIG", function ($http, $q, $localStorage,CONFIG) {
   return{
     getClubList : function(){
       var response = $http({
           method: 'GET',
           url: CONFIG.HOST_API+'/_user?type=GET_ALL_CLUB',
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
+      })
+      return response;
+    },
+    getUserDetails : function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_user?type=GET_USER&id='+id,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
+      })
+      return response;
+    },
+    clubApproval : function(option){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_User',
+          data: option,
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
       })
       return response;
@@ -470,4 +531,16 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       encode                : encode,
       decode                : decode
   };
-}])
+}]);
+app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
+    var Util = {};
+    $rootScope.alerts = [];
+    Util.alertMessage = function(msgType, message){
+        var alert = { type:msgType , msg: message };
+        $rootScope.alerts.push( alert );
+        $timeout(function(){
+            $rootScope.alerts.splice($rootScope.alerts.indexOf(alert), 1);
+        }, 5000);
+    };
+    return Util;
+}]);

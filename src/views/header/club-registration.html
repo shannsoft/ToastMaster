@@ -34,11 +34,12 @@
 						<div class="col-sm-4">
 							<div class="form-group">
 								<label>Email Address <span class="color-red">*</span></label>
-								<input type="text" class="form-control" name="email" ng-model="club.email" placeholder="Email" required>
-								<span class="color-red" ng-show="reg_from.email.$touched && reg_from.email.$invalid">Please enter email</span>
+								<input type="text" class="form-control" name="email" ng-model="club.email" placeholder="Email" ng-pattern="/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/" required>
+								<span class="color-red" ng-show="reg_from.email.$touched && reg_from.email.$error.required">Please enter email</span>
+								<span class="color-red" ng-show="reg_from.email.$touched && reg_from.email.$error.pattern">Please enter valid email</span>
 							</div>
 						</div>
-						</div>
+					</div>
 
 					<div class="row">
 						<div class="col-sm-4">
@@ -110,7 +111,8 @@
 										<div class="col-sm-12">
 											<div class="form-group">
 												<label>Map Location</label>
-												<input type="text" name="companyName" placeholder="" ng-model="obj.latlng" class="form-control">
+												<input type="text" name="companyName" placeholder="" ng-model="obj.latlng" class="form-control" required>
+												<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Please Choose your location from map</span>
 											</div>
 										</div>
 										<div class="col-sm-12">
@@ -155,18 +157,24 @@
 					<div class="row">
 						<div class="col-lg-6">
 							<div class="checkbox check-primary">
-								<input type="checkbox" value="1" id="checkbox1">
-								<label for="checkbox1">I read <a href="#" class="color-green">Terms and Conditions</a></label>
+								<input type="checkbox" id="checkbox1" required ng-model="obj.term_condition">
+								<label for="checkbox1">I read <a href="" class="color-green">Terms and Conditions</a></label>
 							</div>
 						</div>
 						<div class="col-lg-6 text-right">
-							<button class="btn btn-blue" type="submit" ng-click="clubRegister()">Register</button>
+							<button class="btn btn-blue" ng-disabled="reg_from.$invalid" type="submit" ng-click="clubRegister()">Register</button>
+						</div>
+						<div class="col-sm-12">
+							<!-- <section  align="center">
+									<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="close()">{{alert.msg}}</alert>
+							</section> -->
+							<div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}">
+								{{alert.msg}}
+							 </div>
 						</div>
 					</div>
 				</form>
 			</div>
-
-
 		</div>
 	</div>
 </section>

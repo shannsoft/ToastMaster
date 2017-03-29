@@ -7,27 +7,27 @@
       <div class="row">
         <div class="col-md-3">
   			  <div class="bck-profile-details-box">
-  					<img alt="" ng-if="loggedIn_user.photo" ng-src="{{loggedIn_user.photo}}" class="img-responsive">
+  					<img alt="" ng-if="userDetails.photo" ng-src="{{userDetails.photo}}" class="img-responsive">
   					<p>
   						<strong>Email: </strong>
-  						<span>{{loggedIn_user.email}}</span>
+  						<span>{{userDetails.email}}</span>
   					</p>
   					<p>
-  					    Phone: {{loggedIn_user.phone}}
+  					    Phone: {{userDetails.phone}}
   					</p>
   					<p>
   					<strong>Location:</strong>
-  						<span>{{loggedIn_user.address}}</span>
+  						<span>{{userDetails.address}}</span>
   					</p>
   					<p>
   					<strong>About Me</strong>
-  					<span>{{loggedIn_user.about}}</span>
+  					<span>{{userDetails.about}}</span>
   					</p>
   			  </div>
 	      </div>
       <div class="col-md-9">
 				<div class="profile-header">
-					<h2 class="profile-name">{{loggedIn_user.fName+' '+loggedIn_user.lName}}</h2>
+					<h2 class="profile-name">{{userDetails.fName+' '+userDetails.lName}}</h2>
 					<!-- <div class="text-muted">Club Number: 521463, District 41, Area Ho3 </div>
 					<div class="text-muted">Charecter Date : Aug 02, 2017</div> -->
 					<div class="mb20"></div>

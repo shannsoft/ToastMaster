@@ -1,30 +1,36 @@
-app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService){
+app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService,$stateParams){
   // google = undefined;
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
   /***********************************************************/
+  /*****************show the location on map******************/
+  /***********************************************************/
+  $scope.locationOnMap = function(lattitude,longitude){
+    clearTimeout(googleTime);
+    if(document.getElementById('map')){
+      var myLatLng = {lat: parseFloat(lattitude), lng: parseFloat(longitude)};
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: myLatLng
+      });
+
+      var location = new google.maps.Marker({
+        position: myLatLng,
+        draggable:false,
+        map: map
+      });
+    }
+  }
+
+  /***********************************************************/
   /*****************To Check the login user*******************/
   /***********************************************************/
-  $scope.loadUserDetails = function () {
+  $scope.loadProfileDetails = function () {
     var details = $localStorage.loggedInUser;
-    // $scope.trustedURL = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?key=AIzaSyAyPOEsucm0X1kbw1HVmE-fEOa2ArhupZg&q="+details.longitude+","+details.lattitude);
-    // $scope.mapLocation = "https://maps.google.com/maps?q="+details.longitude+","+details.lattitude+"&hl=es;z=9&amp;output=embed";
     if(google == "" || !google.maps || !google.maps.places)
         googleTime = $timeout($scope.loadUserDetails , 3000);
     else {
-      clearTimeout(googleTime);
-      if(document.getElementById('map')){
-        var myLatLng = {lat: parseFloat(details.lattitude), lng: parseFloat(details.longitude)};
-        map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 12,
-          center: myLatLng
-        });
-
-        var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map
-        });
-      }
+      $scope.locationOnMap(details.lattitude, details.longitude);
     }
   }
   /***********************************************************/
@@ -37,5 +43,38 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
       if(response.data.StatusCode == 200)
         $scope.clubList = response.data.Data;
     })
+  }
+  /***********************************************************/
+  /********************Approve club Request*******************/
+  /***********************************************************/
+  $scope.clubApproval  = function(option,id){
+    $rootScope.showPreloader = true;
+    var obj = {
+      "actType"  : option,
+      "userCode" : id
+    }
+    AdminService.clubApproval(obj).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200)
+        $scope.loadUserList();
+    })
+  }
+  /***********************************************************/
+  /*****************To Check the login user*******************/
+  /***********************************************************/
+  $scope.loadUserDetails = function () {
+    $rootScope.showPreloader = true;
+    var user_id = $stateParams.profileid;
+    AdminService.getUserDetails(user_id).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200)
+        $scope.userDetails = response.data.Data[0];
+        if(google == "" || !google.maps || !google.maps.places)
+            googleTime = $timeout($scope.loadUserDetails , 3000);
+        else {
+          $scope.locationOnMap($scope.userDetails.lattitude, $scope.userDetails.longitude);
+        }
+    })
+
   }
 });

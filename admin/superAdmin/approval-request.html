@@ -57,7 +57,7 @@
           </div>
           <div class="ar-block">
             <p>Sponsering Organization</p>
-            <strong>Teknobiz</strong> : <span><a href="#" target="_blank">www.teknobiz.in</a></span>
+            <strong>{{club.sponsoringCompanyName}}</strong> : <span><a href="" target="_blank">{{club.sponsoringCompanyURL}}</a></span>
           </div>
         </div>
         <div class="col-sm-4">
@@ -66,8 +66,8 @@
             <span>{{club.comment}}</span>
           </div>
           <div class="ar-block">
-            <button class="btn btn-black mr5">Approve</button>
-            <button class="btn btn-danger">Reject</button>
+            <button class="btn btn-black mr5" ng-click="clubApproval('APPROVE',club.userCode)">Approve</button>
+            <button class="btn btn-danger" ng-click="clubApproval('REJECT',club.userCode)">Reject</button>
           </div>
         </div>
         <!-- <div class="col-sm-12 text-center">

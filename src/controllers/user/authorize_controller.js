@@ -1,4 +1,4 @@
-app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout){
+app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util){
   $scope.user = {};
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
@@ -54,7 +54,6 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
-            console.log(position);
             geocoder = new google.maps.Geocoder();
             var latLng = new google.maps.LatLng(pos.lat, pos.lng);
             $scope.getLocationDetails(latLng);
@@ -68,7 +67,6 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
               map: map
             });
             google.maps.event.addListener(marker, 'dragend', function() {
-              console.log(marker.getPosition());
               $scope.getLocationDetails(marker.getPosition());
             });
           });
@@ -80,12 +78,9 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
       $scope.club.lattitude = latLng.lat();
       $scope.club.longitude = latLng.lng();
       $scope.obj.latlng = $scope.club.lattitude+', '+$scope.club.longitude;
-      console.log(latLng.lat());
-      console.log(latLng.lng());
       if (geocoder) {
         geocoder.geocode({ 'latLng': latLng}, function (results, status) {
            if (status == google.maps.GeocoderStatus.OK) {
-             console.log(results);
              if (results[1]) {
     					for (var i = 0; i < results.length; i++) {
     						if (results[i].types[0] == "locality") {
@@ -127,14 +122,15 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
     $scope.club.actType = "I";
     $scope.club.userid = $scope.club.email;
     $scope.club.joinType = 2;
-    // $scope.club.lattitude = 18.1561;
-    // $scope.club.longitude = -18.1561;
     $scope.club.pin = parseInt($scope.club.pin);
     UserService.clubRegistration($scope.club).then(function(response){
       $rootScope.showPreloader = false;
-      if(response.data.StatusCode == 200)
+      if(response.data.StatusCode == 200){
         $state.go('club-success');
-        console.log(response);
+      }
+      if(response.data.StatusCode == 100){
+        Util.alertMessage('danger',response.data.Message);
+      }
     })
   }
 });

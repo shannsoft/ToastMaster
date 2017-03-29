@@ -66,4 +66,16 @@ app.factory("CommonService", function ($http,$q) {
       encode                : encode,
       decode                : decode
   };
-})
+});
+app.factory('Util', function( $rootScope, $timeout){
+    var Util = {};
+    $rootScope.alerts = [];
+    Util.alertMessage = function(msgType, message){
+        var alert = { type:msgType , msg: message };
+        $rootScope.alerts.push( alert );
+        $timeout(function(){
+            $rootScope.alerts.splice($rootScope.alerts.indexOf(alert), 1);
+        }, 5000);
+    };
+    return Util;
+});
