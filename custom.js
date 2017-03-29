@@ -38,6 +38,14 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       templateUrl: 'src/views/header/my-toastmasters.html',
       url: '/my-toastmasters'
     })
+  	.state('forgot-password', {
+      templateUrl: 'src/views/header/forgot-password.html',
+      url: '/forgot-password',
+      controller: "AuthorizeController",
+      resolve: {
+          loggedin: checkLoggedin
+      }
+    })
     .state('admin', {
         url: '/admin',
         abstract: true,
@@ -79,6 +87,14 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       url: '/club/:profileid',
       templateUrl: 'admin/superAdmin/clubDetails.html',
       controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.reset-password', {
+      url: '/reset-password',
+      templateUrl: 'admin/user/reset-password.html',
+      controller : 'AuthorizeController',
       resolve: {
           loggedout: checkLoggedout
       }
@@ -270,6 +286,9 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
         $rootScope.$emit('login-success');
         $state.go('admin.dashboard');
       }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
     })
   }
   $scope.getCountryList = function(){
@@ -360,7 +379,42 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       if(response.data.StatusCode == 200){
         $state.go('club-success');
       }
-      if(response.data.StatusCode == 100){
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
+  $scope.validatePassword = function(password,confirmPassword){
+    if(password !== confirmPassword){
+      $scope.showPasswordMisMatch = true;
+    }
+    if(password === confirmPassword){
+      $scope.showPasswordMisMatch = false;
+    }
+  };
+  $scope.changePassword = function(){
+    $rootScope.showPreloader = true;
+    UserService.changePassword($scope.user).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success','You have successfully changed your password');
+      }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  };
+  $scope.forgotPassword = function(){
+    $rootScope.showPreloader = true;
+    UserService.forgotPassword($scope.user).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success','Please check your mail we have sent a password');
+        $timeout(function(){
+          $state.go('login');
+        },5000)
+      }
+      else{
         Util.alertMessage('danger',response.data.Message);
       }
     })
@@ -458,6 +512,32 @@ app.filter('startsWith', function () {
           url: CONFIG.HOST_API+'/_User',
           data : userDetails,
           headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    forgotPassword : function(user){
+      var obj = {
+        "email": user.email
+      }
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_ForgotPassword',
+          data : obj,
+          headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    changePassword : function(user){
+      var obj = {
+        "userId" : $localStorage.loggedInUser.userId,
+        "newPwd" : user.newPwd,
+        "oldPwd" : user.oldPwd
+      }
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_ChangePassword',
+          data: obj,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
       })
       return response;
     }

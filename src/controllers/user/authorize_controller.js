@@ -28,6 +28,9 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
         $rootScope.$emit('login-success');
         $state.go('admin.dashboard');
       }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
     })
   }
   /***********************************************************/
@@ -128,7 +131,51 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
       if(response.data.StatusCode == 200){
         $state.go('club-success');
       }
-      if(response.data.StatusCode == 100){
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
+  /***********************************************************/
+  /********************Check password match*******************/
+  /***********************************************************/
+  $scope.validatePassword = function(password,confirmPassword){
+    if(password !== confirmPassword){
+      $scope.showPasswordMisMatch = true;
+    }
+    if(password === confirmPassword){
+      $scope.showPasswordMisMatch = false;
+    }
+  };
+  /***********************************************************/
+  /********************Check password match*******************/
+  /***********************************************************/
+  $scope.changePassword = function(){
+    $rootScope.showPreloader = true;
+    UserService.changePassword($scope.user).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success','You have successfully changed your password');
+      }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  };
+  /***********************************************************/
+  /********************use for forgot password****************/
+  /***********************************************************/
+  $scope.forgotPassword = function(){
+    $rootScope.showPreloader = true;
+    UserService.forgotPassword($scope.user).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success','Please check your mail we have sent a password');
+        $timeout(function(){
+          $state.go('login');
+        },5000)
+      }
+      else{
         Util.alertMessage('danger',response.data.Message);
       }
     })

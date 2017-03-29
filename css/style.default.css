@@ -13,6 +13,9 @@ URL: http://themepixels.com/
 @import url('chosen.css');
 @import url('lato.css');
 
+.color-red{
+  color:red;
+}
 body {
    background: #1d2939;
    font-family: 'LatoRegular', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, sans-serif !important;

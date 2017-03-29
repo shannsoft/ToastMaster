@@ -36,6 +36,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
       templateUrl: 'src/views/header/my-toastmasters.html',
       url: '/my-toastmasters'
     })
+  	.state('forgot-password', {
+      templateUrl: 'src/views/header/forgot-password.html',
+      url: '/forgot-password',
+      controller: "AuthorizeController",
+      resolve: {
+          loggedin: checkLoggedin
+      }
+    })
     .state('admin', {
         url: '/admin',
         abstract: true,
@@ -77,6 +85,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
       url: '/club/:profileid',
       templateUrl: 'admin/superAdmin/clubDetails.html',
       controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.reset-password', {
+      url: '/reset-password',
+      templateUrl: 'admin/user/reset-password.html',
+      controller : 'AuthorizeController',
       resolve: {
           loggedout: checkLoggedout
       }
