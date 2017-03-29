@@ -20,6 +20,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
       controller: "AuthorizeController",
       url: '/club-registration'
     })
+    .state('member-registration', {
+      templateUrl: 'src/views/header/member-registration.html',
+      controller: "AuthorizeController",
+      url: '/member-registration'
+    })
     .state('club-success', {
       templateUrl: 'src/views/header/club-success.html',
       url: '/club-success'
@@ -73,6 +78,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
           loggedout: checkLoggedout
       }
     })
+    .state('admin.member-approval', {
+      url: '/member-approval',
+      templateUrl: 'admin/club/member-approval.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
     .state('admin.club-list', {
       url: '/club-list',
       templateUrl: 'admin/superAdmin/club-list.html',
@@ -81,9 +94,25 @@ app.config(function($stateProvider, $urlRouterProvider) {
           loggedout: checkLoggedout
       }
     })
+    .state('admin.member-list', {
+      url: '/member-list',
+      templateUrl: 'admin/club/member-list.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
     .state('admin.club', {
       url: '/club/:profileid',
       templateUrl: 'admin/superAdmin/clubDetails.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.member', {
+      url: '/member/:profileid',
+      templateUrl: 'admin/club/memberDetails.html',
       controller : 'UserDetailsController',
       resolve: {
           loggedout: checkLoggedout

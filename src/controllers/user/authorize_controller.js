@@ -1,4 +1,4 @@
-app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util){
+app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util,AdminService){
   $scope.user = {};
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
@@ -41,7 +41,17 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
     UserService.getCountryList().then(function(response){
       $scope.countryList = response.data.Data;
     })
-    $scope.loadMap();
+  }
+  /***********************************************************/
+  /**********************Load club List***********************/
+  /***********************************************************/
+  $scope.loadClubList  = function(){
+    $rootScope.showPreloader = true;
+    AdminService.getClubList().then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200)
+        $scope.clubList = response.data.Data;
+    })
   }
   /***********************************************************/
   /********************Load Map for geopint*******************/
@@ -119,12 +129,12 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
   /***********************************************************/
   /********************For club Registration******************/
   /***********************************************************/
-  $scope.clubRegister = function(){
+  $scope.clubRegister = function(type){
     $rootScope.showPreloader = true;
     $scope.club.isHaveSponsorOrg = ($scope.club.isHaveSponsorOrg == 'True');
     $scope.club.actType = "I";
     $scope.club.userid = $scope.club.email;
-    $scope.club.joinType = 2;
+    $scope.club.joinType = parseInt(type);
     $scope.club.pin = parseInt($scope.club.pin);
     UserService.clubRegistration($scope.club).then(function(response){
       $rootScope.showPreloader = false;

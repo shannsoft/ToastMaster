@@ -7,7 +7,7 @@
 		</div>
 	</div>
 </section>
-<section class="page-section page-background padd-v-60" ng-init="getCountryList();loadMap();">
+<section class="page-section page-background padd-v-60" ng-init="getCountryList();loadClubList()">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -90,70 +90,65 @@
 							</div>
 						</div>
 					</div>
+          <div class="row">
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label>Club<span class="color-red">*</span></label>
+								<select class="form-control" name="" ng-model="club.clubCode">
+									<option value="">Select Club</option>
+									<option value="{{club.userCode}}" ng-repeat="club in clubList" ng-if="club.isApproved">{{club.fName+' '+club.lName}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label>Password <span class="color-red">*</span></label>
+								<input type="password" name="password" class="form-control" placeholder="Password" ng-model="club.pwd" required>
+								<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Please create a password</span>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label>Confirm Password <span class="color-red">*</span></label>
+								<input type="password" name="cpass" class="form-control" placeholder="Confirm Password" ng-model="clubhh.cpass" required>
+								<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Password didn't match</span>
+							</div>
+						</div>
+					</div>
 					<div class="row">
-							<div class="col-sm-6">
-								<div class="row">
-											<div class="col-sm-12">
-												<div class="form-group">
-													<label style="display:block">Will the Club have a Sponsoring Organization?</label>
-													<div class="radio radio-black">
-															<div class="pull-left">
-																<input type="radio" value="one" name="optionyes" id="one">
-																<label for="one">Yes</label>
-															</div>
-															<div class="inline">
-																<input type="radio" checked="checked" value="two" name="optionyes" id="two">
-																<label for="two">No</label>
-															</div>
-														</div>
-												</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label style="display:block">Will the Club have a Sponsoring Organization?</label>
+								<div class="radio radio-black">
+										<div class="pull-left">
+											<input type="radio" value="one" name="optionyes" id="one">
+											<label for="one">Yes</label>
 										</div>
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Map Location</label>
-												<input type="text" name="companyName" placeholder="" ng-model="obj.latlng" class="form-control" required>
-												<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Please Choose your location from map</span>
-											</div>
+										<div class="inline">
+											<input type="radio" checked="checked" value="two" name="optionyes" id="two">
+											<label for="two">No</label>
 										</div>
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Password <span class="color-red">*</span></label>
-												<input type="password" name="password" class="form-control" placeholder="Password" ng-model="club.pwd" required>
-												<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Please create a password</span>
-											</div>
-										</div>
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Confirm Password <span class="color-red">*</span></label>
-												<input type="password" name="cpass" class="form-control" placeholder="Confirm Password" ng-model="clubhh.cpass" required>
-												<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Password didn't match</span>
-											</div>
-										</div>
-
-											<div class="col-sm-12">
-												<div class="form-group">
-													<label>Company Name</label>
-													<input type="text" name="companyName" placeholder="Company Name" ng-model="club.sponsoringCompanyName" class="form-control">
-												</div>
-										</div>
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Company Web Site/URL</label>
-												<input type="text" name="companyURL" class="form-control" placeholder="Company web site" ng-model="club.sponsoringCompanyURL">
-											</div>
-										</div>
-								</div>
+									</div>
 							</div>
-							<div class="col-sm-6">
-									<div id="map"></div>
-									<!-- <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14969.21271310986!2d85.84350465!3d20.287714299999998!3m2!1i1024!2i768!4f13.1!4m3!3e4!4m0!4m0!5e0!3m2!1sen!2sin!4v1489157827519" width="100%" height="510" frameborder="0" style="border:0" allowfullscreen></iframe> -->
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label>Company Name</label>
+								<input type="text" name="companyName" placeholder="Company Name" ng-model="club.sponsoringCompanyName" class="form-control">
 							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label>Company Web Site/URL</label>
+								<input type="text" name="companyURL" class="form-control" placeholder="Company web site" ng-model="club.sponsoringCompanyURL">
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<label>Comments</label>
 						<textarea class="form-control" name="comments" rows="3" placeholder="Comments" ng-model="club.comment"></textarea>
 					</div>
-					<hr>
+          <hr>
 					<div class="row">
 						<div class="col-lg-6">
 							<div class="checkbox check-primary">
@@ -162,7 +157,7 @@
 							</div>
 						</div>
 						<div class="col-lg-6 text-right">
-							<button class="btn btn-blue" ng-disabled="reg_from.$invalid" type="submit" ng-click="clubRegister(2)">Register</button>
+							<button class="btn btn-blue" ng-disabled="reg_from.$invalid" type="submit" ng-click="clubRegister(3)">Register</button>
 						</div>
 						<div class="col-sm-12">
 							<!-- <section  align="center">

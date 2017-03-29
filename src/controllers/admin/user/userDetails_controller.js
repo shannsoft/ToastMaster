@@ -2,24 +2,31 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
   // google = undefined;
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
+  $scope.map = {};
+  $scope.type = '';
   /***********************************************************/
   /*****************show the location on map******************/
   /***********************************************************/
-  $scope.locationOnMap = function(lattitude,longitude){
-    clearTimeout(googleTime);
-    if(document.getElementById('map')){
-      var myLatLng = {lat: parseFloat(lattitude), lng: parseFloat(longitude)};
-      map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: myLatLng
-      });
+  $scope.locationOnMap = function(){
+    if(google == "" || !google.maps || !google.maps.places)
+        googleTime = $timeout($scope.locationOnMap , 3000);
+    else {
+      clearTimeout(googleTime);
+      if(document.getElementById('map')){
+        var myLatLng = {lat: parseFloat($scope.map.lattitude), lng: parseFloat($scope.map.longitude)};
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: myLatLng
+        });
 
-      var location = new google.maps.Marker({
-        position: myLatLng,
-        draggable:false,
-        map: map
-      });
+        var location = new google.maps.Marker({
+          position: myLatLng,
+          draggable:false,
+          map: map
+        });
+      }
     }
+
   }
 
   /***********************************************************/
@@ -27,21 +34,20 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
   /***********************************************************/
   $scope.loadProfileDetails = function () {
     var details = $localStorage.loggedInUser;
-    if(google == "" || !google.maps || !google.maps.places)
-        googleTime = $timeout($scope.loadUserDetails , 3000);
-    else {
-      $scope.locationOnMap(details.lattitude, details.longitude);
-    }
+    $scope.map.lattitude = details.lattitude;
+    $scope.map.longitude = details.longitude;
+    $scope.locationOnMap();
   }
   /***********************************************************/
   /**********************Load club List***********************/
   /***********************************************************/
-  $scope.loadUserList  = function(){
+  $scope.loadUserList  = function(type,isClubid){
+    $scope.type = (isClubid) ? type+"&id="+$localStorage.loggedInUser.userId : type;
     $rootScope.showPreloader = true;
-    AdminService.getClubList().then(function(response){
+    AdminService.getUserList($scope.type).then(function(response){
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200)
-        $scope.clubList = response.data.Data;
+        $scope.userList = response.data.Data;
     })
   }
   /***********************************************************/
@@ -56,7 +62,7 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
     AdminService.clubApproval(obj).then(function(response){
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200)
-        $scope.loadUserList();
+        $scope.loadUserList($scope.type);
     })
   }
   /***********************************************************/
@@ -69,11 +75,9 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200)
         $scope.userDetails = response.data.Data[0];
-        if(google == "" || !google.maps || !google.maps.places)
-            googleTime = $timeout($scope.loadUserDetails , 3000);
-        else {
-          $scope.locationOnMap($scope.userDetails.lattitude, $scope.userDetails.longitude);
-        }
+        $scope.map.lattitude = $scope.userDetails.lattitude;
+        $scope.map.longitude = $scope.userDetails.longitude;
+        $scope.locationOnMap();
     })
 
   }

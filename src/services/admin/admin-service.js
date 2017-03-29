@@ -1,9 +1,9 @@
 app.factory("AdminService", function ($http, $q, $localStorage,CONFIG) {
   return{
-    getClubList : function(){
+    getUserList : function(type){
       var response = $http({
           method: 'GET',
-          url: CONFIG.HOST_API+'/_user?type=GET_ALL_CLUB',
+          url: CONFIG.HOST_API+'/_user?type='+type,
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
       })
       return response;

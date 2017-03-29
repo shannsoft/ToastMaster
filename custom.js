@@ -22,6 +22,11 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       controller: "AuthorizeController",
       url: '/club-registration'
     })
+    .state('member-registration', {
+      templateUrl: 'src/views/header/member-registration.html',
+      controller: "AuthorizeController",
+      url: '/member-registration'
+    })
     .state('club-success', {
       templateUrl: 'src/views/header/club-success.html',
       url: '/club-success'
@@ -75,6 +80,14 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
           loggedout: checkLoggedout
       }
     })
+    .state('admin.member-approval', {
+      url: '/member-approval',
+      templateUrl: 'admin/club/member-approval.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
     .state('admin.club-list', {
       url: '/club-list',
       templateUrl: 'admin/superAdmin/club-list.html',
@@ -83,9 +96,25 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
           loggedout: checkLoggedout
       }
     })
+    .state('admin.member-list', {
+      url: '/member-list',
+      templateUrl: 'admin/club/member-list.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
     .state('admin.club', {
       url: '/club/:profileid',
       templateUrl: 'admin/superAdmin/clubDetails.html',
+      controller : 'UserDetailsController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.member', {
+      url: '/member/:profileid',
+      templateUrl: 'admin/club/memberDetails.html',
       controller : 'UserDetailsController',
       resolve: {
           loggedout: checkLoggedout
@@ -169,36 +198,42 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
 ;app.controller('UserDetailsController',["$scope", "$rootScope", "$localStorage", "$sce", "$timeout", "AdminService", "$stateParams", function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService,$stateParams){
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
-  $scope.locationOnMap = function(lattitude,longitude){
-    clearTimeout(googleTime);
-    if(document.getElementById('map')){
-      var myLatLng = {lat: parseFloat(lattitude), lng: parseFloat(longitude)};
-      map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: myLatLng
-      });
+  $scope.map = {};
+  $scope.type = '';
+  $scope.locationOnMap = function(){
+    if(google == "" || !google.maps || !google.maps.places)
+        googleTime = $timeout($scope.locationOnMap , 3000);
+    else {
+      clearTimeout(googleTime);
+      if(document.getElementById('map')){
+        var myLatLng = {lat: parseFloat($scope.map.lattitude), lng: parseFloat($scope.map.longitude)};
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: myLatLng
+        });
 
-      var location = new google.maps.Marker({
-        position: myLatLng,
-        draggable:false,
-        map: map
-      });
+        var location = new google.maps.Marker({
+          position: myLatLng,
+          draggable:false,
+          map: map
+        });
+      }
     }
+
   }
   $scope.loadProfileDetails = function () {
     var details = $localStorage.loggedInUser;
-    if(google == "" || !google.maps || !google.maps.places)
-        googleTime = $timeout($scope.loadUserDetails , 3000);
-    else {
-      $scope.locationOnMap(details.lattitude, details.longitude);
-    }
+    $scope.map.lattitude = details.lattitude;
+    $scope.map.longitude = details.longitude;
+    $scope.locationOnMap();
   }
-  $scope.loadUserList  = function(){
+  $scope.loadUserList  = function(type,isClubid){
+    $scope.type = (isClubid) ? type+"&id="+$localStorage.loggedInUser.userId : type;
     $rootScope.showPreloader = true;
-    AdminService.getClubList().then(function(response){
+    AdminService.getUserList($scope.type).then(function(response){
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200)
-        $scope.clubList = response.data.Data;
+        $scope.userList = response.data.Data;
     })
   }
   $scope.clubApproval  = function(option,id){
@@ -210,7 +245,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     AdminService.clubApproval(obj).then(function(response){
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200)
-        $scope.loadUserList();
+        $scope.loadUserList($scope.type);
     })
   }
   $scope.loadUserDetails = function () {
@@ -220,11 +255,9 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200)
         $scope.userDetails = response.data.Data[0];
-        if(google == "" || !google.maps || !google.maps.places)
-            googleTime = $timeout($scope.loadUserDetails , 3000);
-        else {
-          $scope.locationOnMap($scope.userDetails.lattitude, $scope.userDetails.longitude);
-        }
+        $scope.map.lattitude = $scope.userDetails.lattitude;
+        $scope.map.longitude = $scope.userDetails.longitude;
+        $scope.locationOnMap();
     })
 
   }
@@ -259,7 +292,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     })
   }
 }]);
-;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", "$timeout", "Util", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util){
+;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", "$timeout", "Util", "AdminService", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util,AdminService){
   $scope.user = {};
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
@@ -296,7 +329,14 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     UserService.getCountryList().then(function(response){
       $scope.countryList = response.data.Data;
     })
-    $scope.loadMap();
+  }
+  $scope.loadClubList  = function(){
+    $rootScope.showPreloader = true;
+    AdminService.getClubList().then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200)
+        $scope.clubList = response.data.Data;
+    })
   }
   $scope.loadMap = function(){
     if(google == "" || !google.maps || !google.maps.places)
@@ -367,12 +407,12 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       }, 1000);
 
   }
-  $scope.clubRegister = function(){
+  $scope.clubRegister = function(type){
     $rootScope.showPreloader = true;
     $scope.club.isHaveSponsorOrg = ($scope.club.isHaveSponsorOrg == 'True');
     $scope.club.actType = "I";
     $scope.club.userid = $scope.club.email;
-    $scope.club.joinType = 2;
+    $scope.club.joinType = parseInt(type);
     $scope.club.pin = parseInt($scope.club.pin);
     UserService.clubRegistration($scope.club).then(function(response){
       $rootScope.showPreloader = false;
@@ -444,10 +484,10 @@ app.filter('startsWith', function () {
 });
 ;app.factory("AdminService", ["$http", "$q", "$localStorage", "CONFIG", function ($http, $q, $localStorage,CONFIG) {
   return{
-    getClubList : function(){
+    getUserList : function(type){
       var response = $http({
           method: 'GET',
-          url: CONFIG.HOST_API+'/_user?type=GET_ALL_CLUB',
+          url: CONFIG.HOST_API+'/_user?type='+type,
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
       })
       return response;
