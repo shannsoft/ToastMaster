@@ -41,6 +41,27 @@ app.config(function($stateProvider, $urlRouterProvider) {
       templateUrl: 'src/views/header/my-toastmasters.html',
       url: '/my-toastmasters'
     })
+	.state('contact-us', {
+      templateUrl: 'src/views/footer/contact.html',
+      url: '/contact-us'
+    })
+	.state('copyrights', {
+      templateUrl: 'src/views/footer/copyrights.html',
+      url: '/copyrights'
+    })
+	.state('faq', {
+      templateUrl: 'src/views/footer/faq.html',
+      url: '/faq'
+    })
+	.state('privacy-policy', {
+      templateUrl: 'src/views/footer/privacy-policy.html',
+      url: '/privacy-policy'
+    })
+	.state('tnc', {
+      templateUrl: 'src/views/footer/terms-conditions.html',
+      url: '/tnc'
+    })
+	
   	.state('forgot-password', {
       templateUrl: 'src/views/header/forgot-password.html',
       url: '/forgot-password',
@@ -48,7 +69,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
       resolve: {
           loggedin: checkLoggedin
       }
-    })
+    })	
     .state('admin', {
         url: '/admin',
         abstract: true,
