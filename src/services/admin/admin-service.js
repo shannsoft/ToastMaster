@@ -24,6 +24,32 @@ app.factory("AdminService", function ($http, $q, $localStorage,CONFIG) {
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
       })
       return response;
+    },
+    getDegList : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_designation',
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
+      })
+      return response;
+    },
+    assignDes : function(userDetails){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_User',
+          data : userDetails,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    createMeeting : function(meeting){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_Meeting',
+          data : meeting,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
     }
   }
 })

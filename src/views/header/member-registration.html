@@ -110,8 +110,9 @@
 						<div class="col-sm-4">
 							<div class="form-group">
 								<label>Confirm Password <span class="color-red">*</span></label>
-								<input type="password" name="cpass" class="form-control" placeholder="Confirm Password" ng-model="clubhh.cpass" required>
+								<input type="password" name="cpass" class="form-control" placeholder="Confirm Password" ng-model="clubhh.cpass" required ng-blur="validatePassword(club.pwd,clubhh.cpass)">
 								<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Password didn't match</span>
+								<span class="color-red" ng-if="resetFrm.cnfmPwd.$touched && showPasswordMisMatch">Password not matched</span>
 							</div>
 						</div>
 					</div>

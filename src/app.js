@@ -1,4 +1,4 @@
-var app = angular.module('toast-master',['ui.router','ngAnimate','ngStorage']);
+var app = angular.module('toast-master',['ui.router','ui.bootstrap','ngAnimate','ngStorage','ui.bootstrap.datetimepicker']);
 app.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider
@@ -143,6 +143,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
       url: '/reset-password',
       templateUrl: 'admin/user/reset-password.html',
       controller : 'AuthorizeController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.create-meeting', {
+      url: '/create-meeting',
+      templateUrl: 'admin/club/create-meeting.html',
+      controller : 'ClubController',
       resolve: {
           loggedout: checkLoggedout
       }

@@ -1,4 +1,4 @@
-app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService,$stateParams){
+app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService,$stateParams,$uibModal){
   // google = undefined;
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
@@ -79,6 +79,60 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
         $scope.map.longitude = $scope.userDetails.longitude;
         $scope.locationOnMap();
     })
-
   }
+  $scope.loadDesignationList = function(){
+    AdminService.getDegList().then(function(response){
+      if(response.data.StatusCode == 200){
+        $scope.designationList = response.data.Data;
+      }
+    })
+  }
+  $scope.designationPopUp = function(size,userCode){
+    var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'admin/assignRollModal.html',
+        size: size,
+        controller: "AssignRollModal",
+        resolve: {
+            designationList : function () {
+                return $scope.designationList;
+            },
+            userCode : function(){
+              return userCode;
+            }
+        }
+    });
+  }
+});
+app.controller('AssignRollModal', function ($scope,$rootScope, $uibModalInstance,designationList,AdminService,$localStorage,userCode,Util,$timeout) {
+    $scope.designationList = designationList;
+    $scope.user = {};
+    $scope.ok = function () {
+      if($scope.user.desigId && $scope.user.desigId != ''){
+        $rootScope.showPreloader = true;
+        var obj = {
+          "actType" : "U",
+          "designationId" : $scope.user.desigId,
+          "userCode" : userCode
+        }
+        AdminService.assignDes(obj).then(function(response){
+          $rootScope.showPreloader = false;
+          if(response.data.StatusCode == 200){
+            Util.alertMessage('success',"Successfully Updated");
+            $timeout(function(){
+              $uibModalInstance.close();
+            },5000);
+          }
+          else{
+            Util.alertMessage('danger',"Something is wrong please try again");
+          }
+        })
+      }
+      else{
+          Util.alertMessage('danger',"Please select a designation");
+      }
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
 });

@@ -1,4 +1,4 @@
-var app = angular.module('toast-master',['ui.router','ngAnimate','ngStorage']);
+var app = angular.module('toast-master',['ui.router','ui.bootstrap','ngAnimate','ngStorage','ui.bootstrap.datetimepicker']);
 app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
     checkLoggedin.$inject = ["$q", "$timeout", "$http", "$location", "$rootScope", "$state", "$localStorage"];
     checkLoggedout.$inject = ["$q", "$timeout", "$http", "$location", "$rootScope", "$state", "$localStorage"];
@@ -149,6 +149,14 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
           loggedout: checkLoggedout
       }
     })
+    .state('admin.create-meeting', {
+      url: '/create-meeting',
+      templateUrl: 'admin/club/create-meeting.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
 
     function checkLoggedout($q, $timeout, $http, $location, $rootScope, $state, $localStorage) {
         var deferred = $q.defer();
@@ -187,6 +195,30 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       $rootScope.is_admin = (state[0] == 'admin') ? true : false;
     })
   }]);
+;app.controller("ClubController",["$scope", "$rootScope", "AdminService", "Util", function($scope,$rootScope,AdminService,Util){
+  $scope.meeting = {};
+  var obj = {};
+  $scope.onTimeSet = function (newDate, oldDate) {
+    $scope.meeting.dateTime = moment(newDate).format("DD-MM-YYYY hh:mm A");
+    obj.scheduleDate = moment(newDate).format("DD-MMM-YYYY");
+    obj.scheduleTime = moment(newDate).format("hh:mm A");
+  }
+  $scope.createMeeting = function(){
+    obj.actType = "I";
+    obj.topic = $scope.meeting.title;
+    obj.description = $scope.meeting.desc;
+    console.log(obj);
+    AdminService.createMeeting(obj).then(function(response){
+      if(response.data.StatusCode == 200){
+        $scope.meeting = {};
+        Util.alertMessage('success','Meeting created succesfully waiting for VP Education Approval');
+      }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
+}])
 ;app.controller('AdminController',["$scope", "$rootScope", function($scope,$rootScope){
   $scope.navigateMenu = function(){
     var body = $('body');
@@ -216,7 +248,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       }
   }
 }]);
-;app.controller('UserDetailsController',["$scope", "$rootScope", "$localStorage", "$sce", "$timeout", "AdminService", "$stateParams", function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService,$stateParams){
+;app.controller('UserDetailsController',["$scope", "$rootScope", "$localStorage", "$sce", "$timeout", "AdminService", "$stateParams", "$uibModal", function($scope,$rootScope,$localStorage,$sce,$timeout,AdminService,$stateParams,$uibModal){
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
   $scope.map = {};
@@ -280,8 +312,62 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
         $scope.map.longitude = $scope.userDetails.longitude;
         $scope.locationOnMap();
     })
-
   }
+  $scope.loadDesignationList = function(){
+    AdminService.getDegList().then(function(response){
+      if(response.data.StatusCode == 200){
+        $scope.designationList = response.data.Data;
+      }
+    })
+  }
+  $scope.designationPopUp = function(size,userCode){
+    var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'admin/assignRollModal.html',
+        size: size,
+        controller: "AssignRollModal",
+        resolve: {
+            designationList : function () {
+                return $scope.designationList;
+            },
+            userCode : function(){
+              return userCode;
+            }
+        }
+    });
+  }
+}]);
+app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", "designationList", "AdminService", "$localStorage", "userCode", "Util", "$timeout", function ($scope,$rootScope, $uibModalInstance,designationList,AdminService,$localStorage,userCode,Util,$timeout) {
+    $scope.designationList = designationList;
+    $scope.user = {};
+    $scope.ok = function () {
+      if($scope.user.desigId && $scope.user.desigId != ''){
+        $rootScope.showPreloader = true;
+        var obj = {
+          "actType" : "U",
+          "designationId" : $scope.user.desigId,
+          "userCode" : userCode
+        }
+        AdminService.assignDes(obj).then(function(response){
+          $rootScope.showPreloader = false;
+          if(response.data.StatusCode == 200){
+            Util.alertMessage('success',"Successfully Updated");
+            $timeout(function(){
+              $uibModalInstance.close();
+            },5000);
+          }
+          else{
+            Util.alertMessage('danger',"Something is wrong please try again");
+          }
+        })
+      }
+      else{
+          Util.alertMessage('danger',"Please select a designation");
+      }
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
 }]);
 ;app.controller("HomeController",["$scope", function($scope){
   
@@ -527,6 +613,32 @@ app.filter('startsWith', function () {
           url: CONFIG.HOST_API+'/_User',
           data: option,
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
+      })
+      return response;
+    },
+    getDegList : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_designation',
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':$localStorage.loggedInUser.tokenId}
+      })
+      return response;
+    },
+    assignDes : function(userDetails){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_User',
+          data : userDetails,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    createMeeting : function(meeting){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_Meeting',
+          data : meeting,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
       return response;
     }

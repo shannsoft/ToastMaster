@@ -45,7 +45,8 @@
 						<div class="col-sm-4">
 							<div class="form-group">
 								<label>Mobile</label>
-								<input type="text" class="form-control" name="mobile" placeholder="Mobile" ng-model="club.phone">
+								<input type="text" class="form-control" name="mobile" placeholder="Mobile" ng-model="club.phone" ng-pattern="/^[0-9]{10,10}$/">
+								<span class="color-red" ng-show="reg_from.mobile.$touched && reg_from.mobile.$error.pattern">Please enter valid number</span>
 							</div>
 						</div>
 						<div class="col-sm-4">
@@ -125,8 +126,9 @@
 										<div class="col-sm-12">
 											<div class="form-group">
 												<label>Confirm Password <span class="color-red">*</span></label>
-												<input type="password" name="cpass" class="form-control" placeholder="Confirm Password" ng-model="clubhh.cpass" required>
+												<input type="password" name="cpass" class="form-control" placeholder="Confirm Password" ng-model="clubhh.cpass" required ng-blur="validatePassword(club.pwd,clubhh.cpass)">
 												<span class="color-red" ng-show="reg_from.password.$touched && reg_from.password.$invalid">Password didn't match</span>
+												<span class="color-red" ng-if="resetFrm.cnfmPwd.$touched && showPasswordMisMatch">Password not matched</span>
 											</div>
 										</div>
 
@@ -162,7 +164,7 @@
 							</div>
 						</div>
 						<div class="col-lg-6 text-right">
-							<button class="btn btn-blue" ng-disabled="reg_from.$invalid" type="submit" ng-click="clubRegister(2)">Register</button>
+							<button class="btn btn-blue" ng-disabled="reg_from.$invalid || showPasswordMisMatch" type="submit" ng-click="clubRegister(2)">Register</button>
 						</div>
 						<div class="col-sm-12">
 							<!-- <section  align="center">
