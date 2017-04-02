@@ -61,7 +61,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
       templateUrl: 'src/views/footer/terms-conditions.html',
       url: '/tnc'
     })
-	
+
   	.state('forgot-password', {
       templateUrl: 'src/views/header/forgot-password.html',
       url: '/forgot-password',
@@ -69,7 +69,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
       resolve: {
           loggedin: checkLoggedin
       }
-    })	
+    })
     .state('admin', {
         url: '/admin',
         abstract: true,
@@ -147,6 +147,22 @@ app.config(function($stateProvider, $urlRouterProvider) {
           loggedout: checkLoggedout
       }
     })
+    .state('admin.meeting-list', {
+      url: '/meeting-list',
+      templateUrl: 'admin/club/meeting-list.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.meeting-details', {
+      url: '/meeting-details/:meetingid',
+      templateUrl: 'admin/club/meeting-details.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
     .state('admin.create-meeting', {
       url: '/create-meeting',
       templateUrl: 'admin/club/create-meeting.html',
@@ -186,10 +202,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
     "SERVER_PATH":1
   })
 
-  app.run(function($http,$rootScope,$localStorage){
+  app.run(function($http,$rootScope,$localStorage,$timeout){
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       $rootScope.stateName = toState.name;
       var state = toState.name.split('.');
+      var frmstate = fromState.name.split('.');
+      console.log('from state',frmstate[0]);
+      if((state[0] == 'admin' && frmstate[0] != 'admin') || (state[0] != 'admin' && frmstate[0] == 'admin')){
+        $rootScope.showPreloader1 = true;
+        $timeout(function(){
+          $rootScope.showPreloader1 = false;
+        },300)
+      }
       $rootScope.is_admin = (state[0] == 'admin') ? true : false;
     })
   });

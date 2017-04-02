@@ -63,7 +63,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       templateUrl: 'src/views/footer/terms-conditions.html',
       url: '/tnc'
     })
-	
+
   	.state('forgot-password', {
       templateUrl: 'src/views/header/forgot-password.html',
       url: '/forgot-password',
@@ -71,7 +71,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       resolve: {
           loggedin: checkLoggedin
       }
-    })	
+    })
     .state('admin', {
         url: '/admin',
         abstract: true,
@@ -149,6 +149,22 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
           loggedout: checkLoggedout
       }
     })
+    .state('admin.meeting-list', {
+      url: '/meeting-list',
+      templateUrl: 'admin/club/meeting-list.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.meeting-details', {
+      url: '/meeting-details/:meetingid',
+      templateUrl: 'admin/club/meeting-details.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
     .state('admin.create-meeting', {
       url: '/create-meeting',
       templateUrl: 'admin/club/create-meeting.html',
@@ -188,14 +204,22 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     "SERVER_PATH":1
   })
 
-  app.run(["$http", "$rootScope", "$localStorage", function($http,$rootScope,$localStorage){
+  app.run(["$http", "$rootScope", "$localStorage", "$timeout", function($http,$rootScope,$localStorage,$timeout){
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       $rootScope.stateName = toState.name;
       var state = toState.name.split('.');
+      var frmstate = fromState.name.split('.');
+      console.log('from state',frmstate[0]);
+      if((state[0] == 'admin' && frmstate[0] != 'admin') || (state[0] != 'admin' && frmstate[0] == 'admin')){
+        $rootScope.showPreloader1 = true;
+        $timeout(function(){
+          $rootScope.showPreloader1 = false;
+        },300)
+      }
       $rootScope.is_admin = (state[0] == 'admin') ? true : false;
     })
   }]);
-;app.controller("ClubController",["$scope", "$rootScope", "AdminService", "Util", function($scope,$rootScope,AdminService,Util){
+;app.controller("ClubController",["$scope", "$rootScope", "AdminService", "Util", "$localStorage", "$stateParams", function($scope,$rootScope,AdminService,Util,$localStorage,$stateParams){
   $scope.meeting = {};
   var obj = {};
   $scope.onTimeSet = function (newDate, oldDate) {
@@ -204,14 +228,40 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     obj.scheduleTime = moment(newDate).format("hh:mm A");
   }
   $scope.createMeeting = function(){
+    $rootScope.showPreloader = true;
     obj.actType = "I";
     obj.topic = $scope.meeting.title;
     obj.description = $scope.meeting.desc;
-    console.log(obj);
     AdminService.createMeeting(obj).then(function(response){
+      $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){
         $scope.meeting = {};
         Util.alertMessage('success','Meeting created succesfully waiting for VP Education Approval');
+      }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
+  $scope.loadMeetingList = function(){
+    $rootScope.showPreloader = true;
+    var id = $localStorage.loggedInUser.userId;
+    AdminService.meetingList(id).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.meetingList = response.data.Data;
+      }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
+  $scope.loadMeetingDetails = function(){
+    $rootScope.showPreloader = true;
+    AdminService.meetingDetails($stateParams.meetingid).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.meetingDetails = response.data.Data[0];
       }
       else{
         Util.alertMessage('danger',response.data.Message);
@@ -638,6 +688,22 @@ app.filter('startsWith', function () {
           method: 'POST',
           url: CONFIG.HOST_API+'/_Meeting',
           data : meeting,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    meetingList : function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_meeting?type=GET_ALL_MEETING&id='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    meetingDetails: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_meeting?type=GET_MEETING_ID&id='+id,
           headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
       return response;

@@ -1,0 +1,126 @@
+<div class="pageheader">
+  <h2><i class="fa fa-home"></i> Meeting Details <span>Subtitle goes here...</span></h2>
+</div>
+<div class="contentpanel" ng-init="loadMeetingDetails()">
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+      <div class="panel-btns">
+        <a href="#" class="panel-close">×</a>
+        <a href="#" class="minimize">−</a>
+      </div>
+      <h4 class="panel-title">Details</h4>
+      </div>
+      <div class="panel-body">
+
+      <form class="form-horizontal form-bordered">
+
+        <div class="form-group">
+          <label class="col-sm-3 text-right">Title :</label>
+          <div class="col-sm-6">
+          {{meetingDetails.topic}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 text-right">When :</label>
+          <div class="col-sm-6">
+          {{meetingDetails.scheduleDate}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 text-right">Description :</label>
+          <div class="col-sm-6">{{meetingDetails.description}}</div>
+        </div>
+        <hr/>
+        </form>
+
+        <div class="row">
+        <div class="col-md-12">
+          <h3>Member Role</h3>
+        </div>
+        <div class="col-md-4">
+          <div class="people-item mr-box">
+            <div class="media">
+            <a href="#" class="pull-left">
+              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
+            </a>
+            <div class="media-body">
+              <h4 class="person-name">John Doe</h4>
+              <button class="btn btn-black mr5" data-toggle="modal" data-target="#myModal">Approve</button>
+              <button class="btn btn-danger">Reject</button>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="people-item mr-box">
+            <div class="media">
+            <a href="#" class="pull-left">
+              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
+            </a>
+            <div class="media-body">
+              <h4 class="person-name">John Doe</h4>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="people-item mr-box">
+            <div class="media">
+            <a href="#" class="pull-left">
+              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
+            </a>
+
+            <div class="media-body">
+              <h4 class="person-name">John Doe</h4>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="people-item mr-box">
+            <div class="media">
+            <a href="#" class="pull-left">
+              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
+            </a>
+            <div class="media-body">
+              <h4 class="person-name">John Doe</h4>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="people-item mr-box">
+            <div class="media">
+            <a href="#" class="pull-left">
+              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
+            </a>
+            <div class="media-body">
+              <h4 class="person-name">John Doe</h4>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="people-item mr-box">
+            <div class="media">
+            <a href="#" class="pull-left">
+              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
+            </a>
+            <div class="media-body">
+              <h4 class="person-name">John Doe</h4>
+            </div>
+            </div>
+          </div>
+        </div>
+       </div>
+
+      </div><!-- panel-body -->
+
+    </div><!-- panel-default -->
+
+
+  </div>
+</div>
+</div>

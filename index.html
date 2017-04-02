@@ -28,17 +28,41 @@
 
 
     <!-- Custom javascript files -->
-    <script src="custom.js?rel=1490939986545"></script>
+    <script src="custom.js?rel=1491115495679"></script>
     <!-- <script src="src/app.js"></script>
     <script src="src/controllers/main_controller.js"></script>
     <script src="src/controllers/home/home_controller.js"></script>
 
     <script src="src/services/common-service.js"></script>
     <script src="src/services/authontication/auth-service.js"></script> -->
+    <style media="screen">
+      #preloader1 {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #999;
+          z-index: 10000;
+          color: #fff;
+      }
+      #status {
+          width: 30px;
+          height: 30px;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin: -15px 0 0 -15px;
+          font-size: 32px;
+      }
+    </style>
 
 </head>
 <body ng-init="checkLoginUser()">
   <div id="preloader" ng-if="showPreloader">
+      <div id="status"><i class="fa fa-spinner fa-spin"></i></div>
+  </div>
+  <div id="preloader1" ng-if="showPreloader1">
       <div id="status"><i class="fa fa-spinner fa-spin"></i></div>
   </div>
   <div ng-include="'src/views/header/header.html'" ng-if="!is_admin"></div>

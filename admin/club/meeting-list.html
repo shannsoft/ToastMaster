@@ -1,0 +1,27 @@
+<div class="pageheader" >
+  <div class="clearfix" >
+    <h2 class="pull-left"><i class="fa fa-home"></i> Meeting List <span>Subtitle goes here...</span></h2>
+    <button class="btn btn-primary pull-right" ui-sref="admin.create-meeting">Conduct New</button>
+  </div>
+</div>
+<div class="contentpanel" ng-init="loadMeetingList()">
+  <div class="panel panel-default" ng-repeat="meeting in meetingList">
+    <div class="panel-body">
+      <div class="row ml-wrap">
+        <div class="col-sm-8">
+          <h3>{{meeting.topic}}</h3>
+          <p class="mt30">{{meeting.description}}</p>
+        </div>
+        <div class="col-sm-4">
+          <div class="ml-bg-box">
+            <h3></h3>
+            <div class="clearfix mt30">
+            <button class="btn btn-primary mr5" ui-sref="admin.meeting-details({meetingid:meeting.id})">Details</button>
+            <button class="btn btn-info">Paynow</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

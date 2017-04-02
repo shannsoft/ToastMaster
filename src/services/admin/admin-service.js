@@ -50,6 +50,22 @@ app.factory("AdminService", function ($http, $q, $localStorage,CONFIG) {
           headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
       return response;
+    },
+    meetingList : function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_meeting?type=GET_ALL_MEETING&id='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    meetingDetails: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_meeting?type=GET_MEETING_ID&id='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
     }
   }
 })
