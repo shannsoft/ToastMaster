@@ -66,6 +66,26 @@ app.factory("AdminService", function ($http, $q, $localStorage,CONFIG) {
           headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
       return response;
+    },
+    getMeetingRoleType: function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_meetingroletype',
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    roleAction: function(action,role){
+      var data = {};
+      action ? data.actType = 'APPROVE' : data.actType = 'REJECT';
+      data.id = role.roleId;
+      data.approveByUserCode = role.roleId;
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_meetingrole ',
+          data : meeting,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
     }
   }
 })

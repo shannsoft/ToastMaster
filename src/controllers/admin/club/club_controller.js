@@ -47,4 +47,32 @@ app.controller("ClubController",function($scope,$rootScope,AdminService,Util,$lo
       }
     })
   }
+  $scope.getMeetingRoleTypeInit = function(){
+    $rootScope.showPreloader = true;
+    AdminService.getMeetingRoleType().then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.meetingDetails = response.data.Data[0];
+        $scope.meetingRoleTypes = response.data.Data;
+      }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
+  $scope.roleAction = function(action,role){
+    return;// return without calling api
+    $rootScope.showPreloader = true;
+
+    AdminService.roleAction(action,role).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.meetingDetails = response.data.Data[0];
+        $scope.meetingRoleTypes = response.data.Data;
+      }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
 })

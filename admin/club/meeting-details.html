@@ -35,86 +35,25 @@
         <hr/>
         </form>
 
-        <div class="row">
+        <div class="row" ng-init="getMeetingRoleTypeInit()" >
         <div class="col-md-12">
           <h3>Member Role</h3>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" ng-repeat="role in meetingRoleTypes" ng-if="meetingRoleTypes.length">
           <div class="people-item mr-box">
             <div class="media">
             <a href="#" class="pull-left">
               <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
             </a>
             <div class="media-body">
-              <h4 class="person-name">John Doe</h4>
-              <button class="btn btn-black mr5" data-toggle="modal" data-target="#myModal">Approve</button>
-              <button class="btn btn-danger">Reject</button>
+              <h4 class="person-name">{{role.roleName}}</h4>
+              <button class="btn btn-black mr5" data-toggle="modal" data-target="#myModal" ng-click="roleAction(1,role)">Approve</button>
+              <button class="btn btn-danger" ng-click="roleAction(0,role)">Reject</button>
             </div>
             </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="people-item mr-box">
-            <div class="media">
-            <a href="#" class="pull-left">
-              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
-            </a>
-            <div class="media-body">
-              <h4 class="person-name">John Doe</h4>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="people-item mr-box">
-            <div class="media">
-            <a href="#" class="pull-left">
-              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
-            </a>
 
-            <div class="media-body">
-              <h4 class="person-name">John Doe</h4>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="people-item mr-box">
-            <div class="media">
-            <a href="#" class="pull-left">
-              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
-            </a>
-            <div class="media-body">
-              <h4 class="person-name">John Doe</h4>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="people-item mr-box">
-            <div class="media">
-            <a href="#" class="pull-left">
-              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
-            </a>
-            <div class="media-body">
-              <h4 class="person-name">John Doe</h4>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="people-item mr-box">
-            <div class="media">
-            <a href="#" class="pull-left">
-              <img alt="" src="images/photos/user2.png" class="thumbnail media-object">
-            </a>
-            <div class="media-body">
-              <h4 class="person-name">John Doe</h4>
-            </div>
-            </div>
-          </div>
-        </div>
-       </div>
 
       </div><!-- panel-body -->
 
