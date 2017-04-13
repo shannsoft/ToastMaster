@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h3 class="modal-title">Add Payment</h3>
+</div>
+<form class="" name="payment">
+<div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label>User</label>
+          <select class="form-control" name="user" ng-model="payment.user" required>
+            <option value="" ng-selected="true">Select User</option>
+            <option value="{{member.userCode}}" ng-repeat="member in memberList">{{member.fName+' '+member.lName}}</option>
+          </select>
+          <span class="color-red" ng-show="payment.user.$touched && payment.user.$invalid">Please Select a User</span>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label>Ammount</label>
+          <input type="number" name="amt" class="form-control" placeholder="Ammount" ng-model="payment.ammount" required>
+          <span class="color-red" ng-show="payment.amt.$touched && payment.amt.$invalid">Please Enter Ammount</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 m-t-10">
+        <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}">
+          {{alert.msg}}
+         </div>
+      </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-disabled="payment.$invalid" class="btn btn-primary" type="button" ng-click="ok()">Submit</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
+</form>

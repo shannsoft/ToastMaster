@@ -171,6 +171,46 @@ app.config(function($stateProvider, $urlRouterProvider) {
           loggedout: checkLoggedout
       }
     })
+    .state('admin.club-pay-collection', {
+      url: '/club-pay-collection/:meetingid',
+      templateUrl: 'admin/club/payment-collection.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.blog-list', {
+      url: '/blog-list',
+      templateUrl: 'admin/club/blogList.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.blog-details', {
+      url: '/blog-details/:bolgid',
+      templateUrl: 'admin/club/blog-details.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.new-blog', {
+      url: '/new-blog',
+      templateUrl: 'admin/club/new-blog.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.expense', {
+      url: '/expense',
+      templateUrl: 'admin/club/expense-list.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
 
     function checkLoggedout($q, $timeout, $http, $location, $rootScope, $state, $localStorage) {
         var deferred = $q.defer();
@@ -207,7 +247,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
       $rootScope.stateName = toState.name;
       var state = toState.name.split('.');
       var frmstate = fromState.name.split('.');
-      console.log('from state',frmstate[0]);
       if((state[0] == 'admin' && frmstate[0] != 'admin') || (state[0] != 'admin' && frmstate[0] == 'admin')){
         $rootScope.showPreloader1 = true;
         $timeout(function(){

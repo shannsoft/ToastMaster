@@ -1,0 +1,50 @@
+<div class="pageheader" ng-init="loadPaymentCollection()">
+   <h2><i class="fa fa-home"></i> Payment Collection <span>Subtitle goes here...</span></h2>
+ </div>
+ <div class="contentpanel">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-sm-6">
+					<h3 class="bold mb10">{{paymentList.paymentDetails[0].meetingTopic}}</h3>
+				</div>
+			</div>
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+					  <tr>
+						<th>Sl No</th>
+						<th>Name</th>
+						<th>Date</th>
+						<th>Price</th>
+					  </tr>
+					</thead>
+  				<tbody>
+					  <tr ng-repeat="pay in paymentList.paymentDetails">
+              <td>
+                {{$index+1}}
+              </td>
+  						<td>
+  							<div class="text-primary"><strong>{{pay.userName}}</strong></div>
+  						</td>
+  						<td>
+  							{{pay.date}}
+  						</td>
+  						<td>$ {{pay.amount}}</td>
+					  </tr>
+					</tbody>
+			  </table>
+		  </div>
+
+			<table class="table table-total">
+				<tbody>
+					<tr>
+						<td><strong>TOTAL :</strong></td>
+						<td>$ {{paymentList.amount}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="mb40"></div>
+		</div>
+	</div>
+</div>

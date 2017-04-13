@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="modal-title">Add Expenses</h3>
+</div>
+<form class="" name="payment">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label>Ammount</label>
+          <input type="number" name="amt" class="form-control" placeholder="Ammount" ng-model="expense.ammount" required>
+          <span class="color-red" ng-show="payment.amt.$touched && payment.amt.$invalid">Please Enter Ammount</span>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" name="desc" rows="3" placeholder="Comments" ng-model="expense.description" required></textarea>
+          <span class="color-red" ng-show="payment.desc.$touched && payment.desc.$invalid">Please Enter Description</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button ng-disabled="payment.$invalid" class="btn btn-primary" type="button" ng-click="ok()">Submit</button>
+      <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

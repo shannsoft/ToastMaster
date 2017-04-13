@@ -1,0 +1,27 @@
+<div class="pageheader" ng-init="getBlogList()">
+  <div class="clearfix" >
+    <h2 class="pull-left"><i class="fa fa-home"></i>Blog List <span>Subtitle goes here...</span></h2>
+    <button class="btn btn-primary pull-right" ui-sref="admin.new-blog">New Blog</button>
+  </div>
+</div>
+<div class="contentpanel">
+	  <div id="bloglist" class="row">
+        <div class="col-xs-6 col-sm-4 col-md-3" ng-repeat="blog in bolgList">
+          <div class="blog-item">
+            <a href="blog-details.html" class="blog-img"><img ng-src="{{blog.image}}" class="img-responsive" alt="" /></a>
+            <div class="blog-details">
+              <h4 class="blog-title"><a href="#">{{blog.title}}</a></h4>
+              <ul class="blog-meta">
+                <li>By: <a href="">{{blog.author}}</a></li>
+                <li>{{blog.date | dateformat}}</li>
+                <!-- <li><a href="#">2 Comments</a></li> -->
+              </ul>
+              <div class="blog-summary">
+                <p>{{blog.description}}</p>
+                <button class="btn btn-sm btn-white" ui-sref="admin.blog-details({bolgid:blog.id})">Read More</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

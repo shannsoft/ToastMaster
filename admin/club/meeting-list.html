@@ -1,4 +1,4 @@
-<div class="pageheader" >
+<div class="pageheader" ng-init="loadUserList('GET_ALL_CLUB_MEMBER',true)">
   <div class="clearfix" >
     <h2 class="pull-left"><i class="fa fa-home"></i> Meeting List <span>Subtitle goes here...</span></h2>
     <button class="btn btn-primary pull-right" ui-sref="admin.create-meeting">Conduct New</button>
@@ -8,16 +8,17 @@
   <div class="panel panel-default" ng-repeat="meeting in meetingList">
     <div class="panel-body">
       <div class="row ml-wrap">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
           <h3>{{meeting.topic}}</h3>
           <p class="mt30">{{meeting.description}}</p>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
           <div class="ml-bg-box">
             <h3></h3>
             <div class="clearfix mt30">
             <button class="btn btn-primary mr5" ui-sref="admin.meeting-details({meetingid:meeting.id})">Details</button>
-            <button class="btn btn-info">Paynow</button>
+            <button class="btn btn-info" ng-click="openPaymentModal(meeting.id)">Receive Payment</button>
+            <button class="btn btn-info" ui-sref="admin.club-pay-collection({meetingid:meeting.id})">Collection Reports</button>
             </div>
           </div>
         </div>

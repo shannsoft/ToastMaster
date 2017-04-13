@@ -173,6 +173,46 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
           loggedout: checkLoggedout
       }
     })
+    .state('admin.club-pay-collection', {
+      url: '/club-pay-collection/:meetingid',
+      templateUrl: 'admin/club/payment-collection.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.blog-list', {
+      url: '/blog-list',
+      templateUrl: 'admin/club/blogList.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.blog-details', {
+      url: '/blog-details/:bolgid',
+      templateUrl: 'admin/club/blog-details.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.new-blog', {
+      url: '/new-blog',
+      templateUrl: 'admin/club/new-blog.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.expense', {
+      url: '/expense',
+      templateUrl: 'admin/club/expense-list.html',
+      controller : 'ClubController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
 
     function checkLoggedout($q, $timeout, $http, $location, $rootScope, $state, $localStorage) {
         var deferred = $q.defer();
@@ -209,7 +249,6 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       $rootScope.stateName = toState.name;
       var state = toState.name.split('.');
       var frmstate = fromState.name.split('.');
-      console.log('from state',frmstate[0]);
       if((state[0] == 'admin' && frmstate[0] != 'admin') || (state[0] != 'admin' && frmstate[0] == 'admin')){
         $rootScope.showPreloader1 = true;
         $timeout(function(){
@@ -219,7 +258,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       $rootScope.is_admin = (state[0] == 'admin') ? true : false;
     })
   }]);
-;app.controller("ClubController",["$scope", "$rootScope", "AdminService", "Util", "$localStorage", "$stateParams", function($scope,$rootScope,AdminService,Util,$localStorage,$stateParams){
+;app.controller("ClubController",["$scope", "$rootScope", "AdminService", "Util", "$localStorage", "$stateParams", "$uibModal", function($scope,$rootScope,AdminService,Util,$localStorage,$stateParams,$uibModal){
   $scope.meeting = {};
   var obj = {};
   $scope.onTimeSet = function (newDate, oldDate) {
@@ -296,7 +335,260 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       }
     })
   }
+  $scope.loadUserList  = function(type,isClubid){
+    $scope.type = (isClubid) ? type+"&id="+$localStorage.loggedInUser.userId : type;
+    AdminService.getUserList($scope.type).then(function(response){
+      if(response.data.StatusCode == 200)
+        $scope.userList = response.data.Data;
+    })
+  }
+  $scope.openPaymentModal = function(id){
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/paymentModal.html',
+     controller: 'paymentModalCtrl',
+     size: 'sm',
+     resolve: {
+       meetingid:function () {
+         return id;
+       },
+       memberList:function () {
+         return $scope.userList;
+       }
+     }
+   });
+  }
+  $scope.videoModal = function(){
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/videoModal.html',
+     controller: 'ModalCtrl',
+     size: 'lg',
+     resolve: {
+       meetingid:function () {
+         return $stateParams.meetingid;
+       }
+     }
+   });
+  }
+  $scope.imageModal = function(){
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/imageModal.html',
+     controller: 'ModalCtrl',
+     size: 'lg',
+     resolve: {
+       meetingid:function () {
+         return $stateParams.meetingid;
+       }
+     }
+   });
+  }
+  $scope.loadPaymentCollection = function(){
+      $rootScope.showPreloader = true;
+      AdminService.loadClubPayment($stateParams.meetingid).then(function(res){
+        $rootScope.showPreloader = false;
+        console.log(res);
+        if(res.data.StatusCode == 200){
+          $scope.paymentList = res.data.Data;
+        }
+      })
+  }
+  $scope.addBlog = function(){
+    var obj  = {
+      "actType": "I",
+      "userCode": $localStorage.loggedInUser.userId,
+      "title": $scope.blog.title,
+      "fileData":{
+        "fileName": $scope.blog.imageName,
+        "inputStream": $scope.blog.image.split(";base64,")[1]
+      },
+      "description": $scope.blog.description
+    }
+    $rootScope.showPreloader = true;
+    AdminService.uploadBolg(obj).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success',"Blog Added Successfully");
+      }
+      else {
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
+  $scope.getBlogList = function(){
+    $rootScope.showPreloader = true;
+    AdminService.getBolgList($localStorage.loggedInUser.userId).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.bolgList = response.data.Data;
+      }
+    })
+  }
+  $scope.getBlogDetails = function(){
+    $rootScope.showPreloader = true;
+    AdminService.getBolgDetails($stateParams.bolgid).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.bolgDetails = response.data.Data[0];
+      }
+    })
+  }
+  $scope.getExpenses = function(){
+    $rootScope.showPreloader = true;
+    AdminService.getExpenses($localStorage.loggedInUser.userId).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.expenseList = response.data.Data;
+      }
+    })
+  }
+  $scope.expenseModal = function(){
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/expenseModal.html',
+     controller: 'ExpenseModalCtrl',
+     size: 'lg',
+     resolve: {
+       addExpense:function () {
+         return $scope.addExpense;
+       }
+     }
+   });
+  }
+  $scope.addExpense= function(obj){
+    var obj1 = {
+      "actType": "I",
+      "userCode": $localStorage.loggedInUser.userId,
+      "amount": obj.ammount,
+      "description": obj.description
+    }
+    $rootScope.showPreloader = true;
+    AdminService.addExpenses(obj1).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.getExpenses();
+        Util.alertMessage('success',"Expenses added successfully");
+      }
+      else{
+        Util.alertMessage('danger',response.data.Message);
+      }
+    })
+  }
 }])
+
+
+
+
+app.controller('paymentModalCtrl', ["$scope", "$rootScope", "$uibModalInstance", "meetingid", "$localStorage", "memberList", "Util", "AdminService", "$timeout", function ($scope, $rootScope,$uibModalInstance,meetingid,$localStorage,memberList,Util,AdminService,$timeout) {
+  $scope.memberList = memberList;
+  $scope.ok = function () {
+    var obj= {
+      "actType": "I",
+      "userCode": $scope.payment.user,
+      "meetingCode": meetingid,
+      "paymentType": "CASH",
+      "adminUserCode": $localStorage.loggedInUser.userId,
+      "amount": $scope.payment.ammount
+    }
+    $rootScope.showPreloader = true;
+    AdminService.addPayment(obj).then(function(res){
+      $rootScope.showPreloader = false;
+      if(res.data.StatusCode == 200){
+        Util.alertMessage('success',"Payment Added Successfully");
+      }
+      else {
+        Util.alertMessage('danger',res.data.Message);
+      }
+      $timeout(function(){
+        $uibModalInstance.close();
+      },3000)
+    })
+  };
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+}]);
+app.controller('ExpenseModalCtrl', ["$scope", "$rootScope", "$uibModalInstance", "addExpense", function ($scope, $rootScope,$uibModalInstance,addExpense) {
+  $scope.ok = function () {
+    addExpense($scope.expense);
+    $uibModalInstance.close();
+  };
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+}]);
+app.controller('ModalCtrl', ["$scope", "$rootScope", "$uibModalInstance", "meetingid", "$localStorage", "Util", "AdminService", "$timeout", "$sce", function ($scope, $rootScope,$uibModalInstance,meetingid,$localStorage,Util,AdminService,$timeout,$sce) {
+  $scope.addVideo  = function () {
+    var obj = {
+      "actType": "I",
+      "meetingCode": meetingid,
+      "userCode": $localStorage.loggedInUser.userId,
+      "title": $scope.video.title,
+      "url": $scope.video.linkURL,
+      "description": $scope.video.description
+    }
+    $rootScope.showPreloader = true;
+    AdminService.addVideo(obj).then(function(res){
+      $rootScope.showPreloader = false;
+      if(res.data.StatusCode == 200){
+        Util.alertMessage('success',"Video Added Successfully");
+      }
+      else {
+        Util.alertMessage('danger',res.data.Message);
+      }
+      $timeout(function(){
+        $uibModalInstance.close();
+      },3000)
+    })
+  };
+  $scope.addImage  = function () {
+    var obj = {
+      "actType": "I",
+      "meetingCode": meetingid,
+      "userCode": $localStorage.loggedInUser.userId,
+      "title": $scope.photo.title,
+      "description": $scope.photo.description,
+      "fileData":{
+        "fileName": $scope.photo.imageName,
+        "inputStream": $scope.photo.image.split(";base64,")[1]
+      }
+    }
+    console.log(obj);
+    $rootScope.showPreloader = true;
+    AdminService.addImage(obj).then(function(res){
+      $rootScope.showPreloader = false;
+      if(res.data.StatusCode == 200){
+        Util.alertMessage('success',"Image Added Successfully");
+      }
+      else {
+        Util.alertMessage('danger',res.data.Message);
+      }
+      $timeout(function(){
+        $uibModalInstance.close();
+      },3000)
+    })
+  };
+
+  $scope.convertVideo = function(){
+    $scope.youtubeURL = '';
+    youtube_url = transformYoutubeURL($scope.video.linkURL);
+    $scope.youtubeURL = $sce.trustAsResourceUrl(youtube_url);
+  }
+  function transformYoutubeURL(youtube_url) {
+    var coll = youtube_url.split("=",2);
+    if(coll != null) {
+        var videoId = coll[1];
+        return_url = 'https://www.youtube.com/embed/' + videoId;
+    } else {
+        return youtube_url;
+    }
+    return return_url;
+  }
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+}]);
 ;app.controller('AdminController',["$scope", "$rootScope", function($scope,$rootScope){
   $scope.navigateMenu = function(){
     var body = $('body');
@@ -645,7 +937,27 @@ app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", 
     })
   }
 }]);
-;app.filter('dateformat', function(){
+;app.directive('fileModel', ['$parse', function ($parse) {
+   return {
+      restrict: 'A',
+      scope: {
+         fileread: "=",
+         filename: "=",
+      },
+      link: function(scope, element, attrs) {
+         element.bind('change', function(){
+            var fileReader = new FileReader();
+            fileReader.onload = function(e) {
+               scope.$apply(function(){
+                  scope.fileread = e.target.result;
+                  scope.filename = element[0].files[0].name;
+               });
+            };
+            fileReader.readAsDataURL(element[0].files[0]);
+         });
+      }
+   };
+}]);;app.filter('dateformat', function(){
   return function(date){
     if(date){
       return moment(date).format("MMM DD, YYYY");
@@ -731,7 +1043,7 @@ app.filter('startsWith', function () {
     meetingDetails: function(id){
       var response = $http({
           method: 'GET',
-          url: CONFIG.HOST_API+'/_meeting?type=GET_MEETING_ID&id='+id,
+          url: CONFIG.HOST_API+'/_meeting?type=GET_MEETING_ID&meetingid='+id,
           headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
       return response;
@@ -755,6 +1067,84 @@ app.filter('startsWith', function () {
           data : meeting,
           headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
+      return response;
+    },
+    addPayment: function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_MeetingPayment',
+          data : obj,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    addVideo: function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_MeetingVideo',
+          data : obj,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    addImage: function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_MeetingPhoto',
+          data : obj,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    uploadBolg: function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_MeetingBlog',
+          data : obj,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    loadClubPayment: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_MeetingPayment?type=GET_MEETING_ID&meetingid='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    getBolgList: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_MeetingBlog?type=GET_BLOG_USER&userCode='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    getBolgDetails: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_MeetingBlog?type=GET_BLOG_DETAILS&blogCode='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    getExpenses: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_MeetingExpenses?type=GET_EXPENSE_USERID&userCode='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    addExpenses: function(obj){
+      var response = $http({
+          method: 'POST',
+          data:obj,
+          url: CONFIG.HOST_API+'/_MeetingExpenses',
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
     }
   }
 }])

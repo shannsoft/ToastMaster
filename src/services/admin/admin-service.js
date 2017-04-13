@@ -62,7 +62,7 @@ app.factory("AdminService", function ($http, $q, $localStorage,CONFIG) {
     meetingDetails: function(id){
       var response = $http({
           method: 'GET',
-          url: CONFIG.HOST_API+'/_meeting?type=GET_MEETING_ID&id='+id,
+          url: CONFIG.HOST_API+'/_meeting?type=GET_MEETING_ID&meetingid='+id,
           headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
       return response;
@@ -86,6 +86,84 @@ app.factory("AdminService", function ($http, $q, $localStorage,CONFIG) {
           data : meeting,
           headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
+      return response;
+    },
+    addPayment: function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_MeetingPayment',
+          data : obj,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    addVideo: function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_MeetingVideo',
+          data : obj,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    addImage: function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_MeetingPhoto',
+          data : obj,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    uploadBolg: function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.HOST_API+'/_MeetingBlog',
+          data : obj,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    loadClubPayment: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_MeetingPayment?type=GET_MEETING_ID&meetingid='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    getBolgList: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_MeetingBlog?type=GET_BLOG_USER&userCode='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    getBolgDetails: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_MeetingBlog?type=GET_BLOG_DETAILS&blogCode='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    getExpenses: function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_MeetingExpenses?type=GET_EXPENSE_USERID&userCode='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    addExpenses: function(obj){
+      var response = $http({
+          method: 'POST',
+          data:obj,
+          url: CONFIG.HOST_API+'/_MeetingExpenses',
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
     }
   }
 })

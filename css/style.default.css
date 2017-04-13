@@ -3951,3 +3951,17 @@ div.error label.error:before {
   height: 400px;
   width: 100%;
 }
+.bold{
+  font-weight: bold !important;
+}
+.right{
+  float: right;
+}
+.m-l-10{margin-left:10px;}
+.m-l-20{margin-left:20px;}
+
+.m-t-10{margin-top:10px;}
+.m-t-15{margin-top:15px;}
+.m-t-20{margin-top:20px;}
+.m-t-22{margin-top:22px;}
+.m-t-30{margin-top:30px;}
