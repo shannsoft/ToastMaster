@@ -45,13 +45,13 @@
 					<hr/>
 					<div class="search-result-details">
 						<div class="location-wrap" ng-repeat="club in clubList">
-							<a href=""><h3>{{club.clubName}}</h3></a>
+							<a href="" ng-click="gotoDetails(club)"><h3>{{club.clubName}}</h3></a>
 							<h4>Bhubaneswar, India (0.54 mi)</h4>
 							<p>3:00 PM / Sundays</p>
 						</div>
 					</div>
 					<div class="clearfix text-center">
-						<a class="btn btn-blue m-t-10" href="">Start a Club</a>
+						<a class="btn btn-blue m-t-10" href="" ui-sref="club-registration">Start a Club</a>
 					</div>
 				</div>
 			</div>
@@ -59,20 +59,6 @@
 				<div id="googleMap"></div>
 			</div>
 			
-		</div>
-	</div>
-</section>
-<section class="page-section twitt-section">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-5">
-				<i class="fa fa-twitter"></i>
-				<h2>Recent Tweets</h2>
-				<p>Find us: @BBsrdfhsdjk</p>
-			</div>
-			<div class="col-md-7">
-				<p>Lorem ipsum dolor sit amet, Maecenas viverra semper arcu, vitae blandit nibh lobortis a. Mauris in eros et justo accumsan  </div>
-			</div>
 		</div>
 	</div>
 </section>

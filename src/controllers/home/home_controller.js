@@ -1,4 +1,4 @@
-app.controller("HomeController",function($scope,$rootScope,MainService){
+app.controller("HomeController",function($scope,$rootScope,MainService,$localStorage,$state){
   /****************************************************************************/
   /****************fUNCTION USE FOR FIRE A EVENT TO JAVASCRIPT*****************/
   /****************************************************************************/
@@ -32,7 +32,7 @@ app.controller("HomeController",function($scope,$rootScope,MainService){
   $scope.loadMap = function() {
     $scope.markers = [];
     map = new google.maps.Map(document.getElementById('googleMap'), {
-      zoom: 7
+      zoom: 10
     });
     $scope.setMarkers();
   }
@@ -43,14 +43,33 @@ app.controller("HomeController",function($scope,$rootScope,MainService){
     var bound = new google.maps.LatLngBounds();
     angular.forEach($scope.clubList, function(item) {
       var loc = new google.maps.LatLng(parseFloat(item.lattitude), parseFloat(item.longitude));
+      var icon = {
+	    url: "images/map-icon.png", // url
+	    scaledSize: new google.maps.Size(50, 50), // scaled size
+	    origin: new google.maps.Point(0,0), // origin
+	    anchor: new google.maps.Point(0, 0) // anchor
+	  };
       var marker = new google.maps.Marker({
         position: loc,
         map: map,
+        icon: icon,
         animation: google.maps.Animation.DROP
       });
+      marker.addListener('click', function() {
+	  	$localStorage.club = item;
+  		$state.go('club-details');
+	  });
       bound.extend(loc);
       $scope.markers.push(marker);
     });
     map.setCenter(bound.getCenter());
+  }
+  $scope.gotoDetails = function(club){
+  	$localStorage.club = club;
+  	$state.go('club-details');
+  }
+  $scope.clubDetails = function(){
+  	$scope.clubDetails = $localStorage.club;
+  	console.log($scope.clubDetails);
   }
 })

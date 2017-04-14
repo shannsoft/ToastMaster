@@ -2,19 +2,19 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-9">
-				<h2>Club Registration</h2>
+				<h2>Member Registration</h2>
 			</div>
 		</div>
 	</div>
 </section>
-<section class="page-section page-background padd-v-60" ng-init="getCountryList();loadClubList()">
+<section class="page-section page-background padd-v-60" ng-init="getCountryList();">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<form class="reg-page" name="reg_from">
 					<div class="reg-header">
-						<h2>Start a Club</h2>
-						<p>Yes! I would like to be contacted about starting a Toastmaster club in my area.</p>
+						<h2>Join as a member</h2>
+						<p>Yes! I would like to be join as a member in your club</p>
 					</div>
 					<div class="row">
 						<div class="col-sm-4">
@@ -94,10 +94,7 @@
 						<div class="col-sm-4">
 							<div class="form-group">
 								<label>Club<span class="color-red">*</span></label>
-								<select class="form-control" name="" ng-model="club.clubCode">
-									<option value="">Select Club</option>
-									<option value="{{club.userCode}}" ng-repeat="club in clubList" ng-if="club.isApproved">{{club.fName+' '+club.lName}}</option>
-								</select>
+								<input type="text" name="clubcode" class="form-control" placeholder="Club Code" ng-model="club.clubCode" readonly>
 							</div>
 						</div>
 						<div class="col-sm-4">
@@ -146,8 +143,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>Comments</label>
-						<textarea class="form-control" name="comments" rows="3" placeholder="Comments" ng-model="club.comment"></textarea>
+						<label>About Me</label>
+						<textarea class="form-control" name="comments" rows="3" placeholder="About Me" ng-model="club.about"></textarea>
 					</div>
           <hr>
 					<div class="row">

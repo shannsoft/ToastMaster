@@ -23,7 +23,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state('member-registration', {
       templateUrl: 'src/views/header/member-registration.html',
       controller: "AuthorizeController",
-      url: '/member-registration'
+      url: '/member-registration/:clubid'
     })
     .state('club-success', {
       templateUrl: 'src/views/header/club-success.html',
@@ -32,6 +32,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state('find-club', {
       templateUrl: 'src/views/header/find-club.html',
       url: '/find-club',
+      controller: "HomeController"
+    })
+    .state('club-details', {
+      templateUrl: 'src/views/home/club-details.html',
+      url: '/club-details',
       controller: "HomeController"
     })
   	.state('need-help', {

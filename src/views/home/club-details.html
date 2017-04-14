@@ -1,0 +1,67 @@
+<section class="inner-banner-section" ng-init="clubDetails()">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9">
+				<h2>Club Details</h2>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section page-background padd-v-60">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="profile-details-wrap">
+					<h3>Proffessional Details</h3>
+					<img ng-src="{{clubDetails.photo}}" height="360" />
+					<div class="profile-info">
+						<table class="table"> 
+							<tbody> 
+								<tr> 
+									<th scope="row">Name</th> 
+									<td>{{clubDetails.clubName}}</td>
+								</tr> 
+								<tr> 
+									<th scope="row">Email</th> 
+									<td>{{clubDetails.email}}</td> 
+								</tr>
+								<tr> 
+									<th scope="row">Owner</th> 
+									<td>{{clubDetails.fName+" "+clubDetails.lName}}</td> 
+								</tr>
+								<tr> 
+									<th scope="row">Location</th> 
+									<td>{{clubDetails.address}}</td> 
+								</tr>
+								<tr> 
+									<th scope="row">Phone</th> 
+									<td>{{clubDetails.phone}}</td> 
+								</tr>
+								<tr> 
+									<th scope="row">Reg Date</th> 
+									<td>{{clubDetails.regdDate}}</td> 
+								</tr>
+							</tbody> 
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8">
+				<div class="profile-description">
+					<div class="clearfix">
+						<h3>About US</h3>
+						<hr/>
+						<p>{{clubDetails.about}}</p>
+					</div>
+					<div class="clearfix m-t-30">
+						<h3>Journey Highlights:</h3>
+						<hr/>
+						<p class="testim">“Toastmasters accepts you for who you are, and helps <br/>you become whatever you aspire to be.”</p>
+						<button class="btn btn-primary" type="button" ui-sref="member-registration({clubid:clubDetails.userCode})">Join as a member</button>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</section>

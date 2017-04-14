@@ -1,4 +1,4 @@
-app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util,AdminService){
+app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util,AdminService,$stateParams){
   $scope.user = {};
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
@@ -38,6 +38,7 @@ app.controller('AuthorizeController',function($scope,$rootScope,$localStorage,$w
   /***********************************************************/
   $scope.getCountryList = function(){
     $scope.club = {};
+    $scope.club.clubCode = $stateParams.clubid;
     UserService.getCountryList().then(function(response){
       $scope.countryList = response.data.Data;
     })

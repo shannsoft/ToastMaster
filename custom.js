@@ -25,7 +25,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     .state('member-registration', {
       templateUrl: 'src/views/header/member-registration.html',
       controller: "AuthorizeController",
-      url: '/member-registration'
+      url: '/member-registration/:clubid'
     })
     .state('club-success', {
       templateUrl: 'src/views/header/club-success.html',
@@ -34,6 +34,11 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     .state('find-club', {
       templateUrl: 'src/views/header/find-club.html',
       url: '/find-club',
+      controller: "HomeController"
+    })
+    .state('club-details', {
+      templateUrl: 'src/views/home/club-details.html',
+      url: '/club-details',
       controller: "HomeController"
     })
   	.state('need-help', {
@@ -749,7 +754,7 @@ app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", 
         $uibModalInstance.dismiss('cancel');
     };
 }]);
-;app.controller("HomeController",["$scope", "$rootScope", "MainService", function($scope,$rootScope,MainService){
+;app.controller("HomeController",["$scope", "$rootScope", "MainService", "$localStorage", "$state", function($scope,$rootScope,MainService,$localStorage,$state){
   $scope.home.distance = "3";
   $scope.home.clubname = "";
   $rootScope.$on("GOOGLE_LOLADED",function(){
@@ -777,7 +782,7 @@ app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", 
   $scope.loadMap = function() {
     $scope.markers = [];
     map = new google.maps.Map(document.getElementById('googleMap'), {
-      zoom: 7
+      zoom: 10
     });
     $scope.setMarkers();
   }
@@ -785,15 +790,34 @@ app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", 
     var bound = new google.maps.LatLngBounds();
     angular.forEach($scope.clubList, function(item) {
       var loc = new google.maps.LatLng(parseFloat(item.lattitude), parseFloat(item.longitude));
+      var icon = {
+	    url: "images/map-icon.png", // url
+	    scaledSize: new google.maps.Size(50, 50), // scaled size
+	    origin: new google.maps.Point(0,0), // origin
+	    anchor: new google.maps.Point(0, 0) // anchor
+	  };
       var marker = new google.maps.Marker({
         position: loc,
         map: map,
+        icon: icon,
         animation: google.maps.Animation.DROP
       });
+      marker.addListener('click', function() {
+	  	$localStorage.club = item;
+  		$state.go('club-details');
+	  });
       bound.extend(loc);
       $scope.markers.push(marker);
     });
     map.setCenter(bound.getCenter());
+  }
+  $scope.gotoDetails = function(club){
+  	$localStorage.club = club;
+  	$state.go('club-details');
+  }
+  $scope.clubDetails = function(){
+  	$scope.clubDetails = $localStorage.club;
+  	console.log($scope.clubDetails);
   }
 }])
 ;app.controller('MainController',["$scope", "$rootScope", "$localStorage", "UserService", "$state", "$timeout", "CommonService", "Config", function($scope,$rootScope,$localStorage,UserService,$state,$timeout,CommonService,Config){
@@ -879,7 +903,7 @@ app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", 
     }
   }
 }]);
-;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", "$timeout", "Util", "AdminService", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util,AdminService){
+;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", "$timeout", "Util", "AdminService", "$stateParams", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util,AdminService,$stateParams){
   $scope.user = {};
   google = typeof google === 'undefined' ? "" : google;
   var googleTime;
@@ -913,6 +937,7 @@ app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", 
   }
   $scope.getCountryList = function(){
     $scope.club = {};
+    $scope.club.clubCode = $stateParams.clubid;
     UserService.getCountryList().then(function(response){
       $scope.countryList = response.data.Data;
     })
