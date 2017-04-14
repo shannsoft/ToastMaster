@@ -2,43 +2,66 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-9">
-				<h2>Find Club</h2>
+				<h2>Find a Club</h2>
 			</div>
 		</div>
 	</div>
 </section>
 
-<section class="page-section padd-v-60">
+<section class="page-section padd-v-60" ng-init="homeInit()">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4">
 				<div class="location-details">
-					<h4>Search your Location</h4>
+					<h4>Find a club near you</h4>
 					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Choose Starting Point">
+						<input type="text" id="main_loc" class="form-control p-r-30" placeholder="Enter specific Location" ng-model="home.location">
+						<i class="fa fa-close placeholder-close pointer" ng-click="clearInputs('loc')"></i>
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Choose Destination">
+						<input type="text" class="form-control" placeholder="Club name and Number" ng-model="home.clubname">
+						<i class="fa fa-close placeholder-close pointer" ng-click="clearInputs('club')"></i>
+					</div>
+					<div class="form-group">
+						<select class="form-control" ng-model="home.distance">
+                            <option value="">Select Radius</option>
+							<option value="3">2 miles (3 km) Radius</option>
+							<option value="8">5 miles (8 km) Radius</option>
+							<option value="16">10 miles (16 km) Radius</option>
+							<option value="40">25 miles (40 km) Radius</option>
+							<option value="80">50 miles (80 km) Radius</option>
+							<option value="161">100 miles (161 km) Radius</option>
+							<option value="241">150 miles (241 km) Radius</option>
+                        </select>
 					</div>
 					<div class="text-right">
-						<a href="" class="btn btn-blue btn-sm">Search</a>
+						<a href="" class="btn btn-blue btn-sm" ng-click="searchClub()">Search</a>
 					</div>
 					<hr/>
 					<ul>
-						<li><i class="fa fa-check"></i>Restricted eligibility criteria exist</li>
+						<li><i class="fa fa-check"></i>Restricted; eligibility criteria exist</li>
 						<li><i class="fa fa-check"></i>Advanced Toastmaster Club</li>
 					</ul>
+					<hr/>
+					<div class="search-result-details">
+						<div class="location-wrap" ng-repeat="club in clubList">
+							<a href=""><h3>{{club.clubName}}</h3></a>
+							<h4>Bhubaneswar, India (0.54 mi)</h4>
+							<p>3:00 PM / Sundays</p>
+						</div>
+					</div>
+					<div class="clearfix text-center">
+						<a class="btn btn-blue m-t-10" href="">Start a Club</a>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-8">
-				<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14969.21271310986!2d85.84350465!3d20.287714299999998!3m2!1i1024!2i768!4f13.1!4m3!3e4!4m0!4m0!5e0!3m2!1sen!2sin!4v1489157827519" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+				<div id="googleMap"></div>
 			</div>
 			
 		</div>
 	</div>
 </section>
-
-
 <section class="page-section twitt-section">
 	<div class="container">
 		<div class="row">
@@ -46,12 +69,10 @@
 				<i class="fa fa-twitter"></i>
 				<h2>Recent Tweets</h2>
 				<p>Find us: @BBsrdfhsdjk</p>
-				
 			</div>
 			<div class="col-md-7">
 				<p>Lorem ipsum dolor sit amet, Maecenas viverra semper arcu, vitae blandit nibh lobortis a. Mauris in eros et justo accumsan  </div>
 			</div>
-
 		</div>
 	</div>
 </section>

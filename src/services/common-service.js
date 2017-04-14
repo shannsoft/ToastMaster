@@ -62,9 +62,14 @@ app.factory("CommonService", function ($http,$q) {
       } while (i < input.length);
       return output;
   };
+  var fetchLocation = function(params) {
+    var response = $http.get(params);
+    return response;
+  };
   return {
       encode                : encode,
-      decode                : decode
+      decode                : decode,
+      fetchLocation         : fetchLocation
   };
 });
 app.factory('Util', function( $rootScope, $timeout){

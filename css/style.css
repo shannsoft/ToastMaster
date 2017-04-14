@@ -453,6 +453,7 @@ a:hover{ color:#000;}
 .m-r-30{ margin-right:30px;}
 .m-auto{margin:30px auto 50px!important;}
 .p-r-2{ padding-right:2px}
+.p-r-30{ padding-right:30px}
 .p-l-2{ padding-left:2px}
 .p-l-10{ padding-left:10px}
 .h-218{height:218px;}
@@ -463,6 +464,9 @@ a:hover{ color:#000;}
 }
 .padd-0{
 	padding:0px;
+}
+.pointer {
+    cursor: pointer;
 }
 
 .green-line{
@@ -964,6 +968,10 @@ a:hover{ color:#000;}
   height: 510px;
   width: 100%;
 }
+#googleMap {
+  height: 800px;
+  width: 100%;
+}
 
 
 /* header dropdown menu start */
@@ -1179,4 +1187,11 @@ a:hover{ color:#000;}
 	font-weight:bold;
 	color:#676767;
 	margin: 0px 0px 6px;
+}
+.placeholder-close {
+    position: relative;
+    color: #777;
+    float: right;
+    top: -30px;
+    right: 6px;
 }

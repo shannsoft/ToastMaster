@@ -32,6 +32,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state('find-club', {
       templateUrl: 'src/views/header/find-club.html',
       url: '/find-club',
+      controller: "HomeController"
     })
   	.state('need-help', {
       templateUrl: 'src/views/header/need-help.html',

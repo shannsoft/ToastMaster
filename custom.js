@@ -34,6 +34,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     .state('find-club', {
       templateUrl: 'src/views/header/find-club.html',
       url: '/find-club',
+      controller: "HomeController"
     })
   	.state('need-help', {
       templateUrl: 'src/views/header/need-help.html',
@@ -258,7 +259,16 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
       $rootScope.is_admin = (state[0] == 'admin') ? true : false;
     })
   }]);
-;app.controller("ClubController",["$scope", "$rootScope", "AdminService", "Util", "$localStorage", "$stateParams", "$uibModal", function($scope,$rootScope,AdminService,Util,$localStorage,$stateParams,$uibModal){
+;app.factory("Config", ["$rootScope", function($rootScope) {
+  var gApi = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
+  var gApiKey = "AIzaSyAyPOEsucm0X1kbw1HVmE-fEOa2ArhupZg";
+  return{
+  	getLocationUrl : function(param){
+  		var url = gApi+param+"&key="+gApiKey;
+    	return url;
+  	}
+  }
+}]);;app.controller("ClubController",["$scope", "$rootScope", "AdminService", "Util", "$localStorage", "$stateParams", "$uibModal", function($scope,$rootScope,AdminService,Util,$localStorage,$stateParams,$uibModal){
   $scope.meeting = {};
   var obj = {};
   $scope.onTimeSet = function (newDate, oldDate) {
@@ -739,14 +749,62 @@ app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", 
         $uibModalInstance.dismiss('cancel');
     };
 }]);
-;app.controller("HomeController",["$scope", function($scope){
-  
+;app.controller("HomeController",["$scope", "$rootScope", "MainService", function($scope,$rootScope,MainService){
+  $scope.home.distance = "3";
+  $scope.home.clubname = "";
+  $rootScope.$on("GOOGLE_LOLADED",function(){
+  	$scope.searchClub();
+  })
+
+  $scope.searchClub = function(){
+  	$rootScope.showPreloader = true;
+  	var latLng = $scope.latLong.split(',');
+  	var obj = {
+	  "latitude": latLng[0],
+	  "longitude": latLng[1],
+	  "distance": $scope.home.distance,
+	  "distanceType": "km",
+	  "clubName": $scope.home.clubname
+	}
+  	MainService.searchClub(obj).then(function(response){
+  		$rootScope.showPreloader = false;
+  		if(response.data.StatusCode == 200){
+  			$scope.clubList = response.data.Data;
+  			$scope.loadMap();
+  		}
+  	})
+  }
+  $scope.loadMap = function() {
+    $scope.markers = [];
+    map = new google.maps.Map(document.getElementById('googleMap'), {
+      zoom: 7
+    });
+    $scope.setMarkers();
+  }
+  $scope.setMarkers = function() {
+    var bound = new google.maps.LatLngBounds();
+    angular.forEach($scope.clubList, function(item) {
+      var loc = new google.maps.LatLng(parseFloat(item.lattitude), parseFloat(item.longitude));
+      var marker = new google.maps.Marker({
+        position: loc,
+        map: map,
+        animation: google.maps.Animation.DROP
+      });
+      bound.extend(loc);
+      $scope.markers.push(marker);
+    });
+    map.setCenter(bound.getCenter());
+  }
 }])
-;app.controller('MainController',["$scope", "$rootScope", "$localStorage", "UserService", "$state", function($scope,$rootScope,$localStorage,UserService,$state){
+;app.controller('MainController',["$scope", "$rootScope", "$localStorage", "UserService", "$state", "$timeout", "CommonService", "Config", function($scope,$rootScope,$localStorage,UserService,$state,$timeout,CommonService,Config){
   $scope.$on('$viewContentLoaded',
     function(event) {
       $(document).trigger("TemplateLoaded");
   });
+
+  google = typeof google === 'undefined' ? "" : google;
+  var googleTime;
+  $scope.home = {};
   $rootScope.$on('login-success', function(event) {
       $scope.signedView = false;
       $scope.checkLoginUser();
@@ -767,6 +825,58 @@ app.controller('AssignRollModal', ["$scope", "$rootScope", "$uibModalInstance", 
         $state.go('home');
       }
     })
+  }
+  $scope.homeInit = function(reload) {
+    if(google=="" || !google.maps || !google.maps.places)
+        googleTime = $timeout($scope.homeInit , 3000);
+    else {
+      clearTimeout(googleTime);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+        function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          var latLng = pos.lat + "," + pos.lng;
+          var urlStr = Config.getLocationUrl(latLng);
+          CommonService.fetchLocation(urlStr).then(function(response) {
+            $scope.place = response.data.results[3];
+            $scope.home.location = $scope.place.formatted_address;
+            $scope.latLong =  $scope.place.geometry.location.lat + "," +  $scope.place.geometry.location.lng;
+            $scope.initLocation();
+          },function(err) {
+          });
+        });
+      }
+    }
+  };
+  $scope.initLocation = function() {
+    var input = /** @type {!HTMLInputElement} */(
+    document.getElementById('main_loc'));
+    autocomplete = new google.maps.places.Autocomplete(
+      input, {
+          types: ['geocode']
+    });
+    autocomplete.addListener('place_changed', onPlaceChanged);
+    $rootScope.isGoogleLoaded = true;
+    $scope.$emit("GOOGLE_LOLADED");
+  };
+  var onPlaceChanged = function() {
+    var place = $scope.place = autocomplete.getPlace();
+    if (place.geometry) {
+      $scope.latLong = place.geometry.location.lat() + "," + place.geometry.location.lng();
+    } else {
+      document.getElementById('main_loc').placeholder = 'Enter a city';
+    }
+  };
+  $scope.clearInputs = function(type){
+    if(type == 'loc'){
+      $scope.home.location = '';
+    }
+    else if(type == 'club'){
+      $scope.home.clubname = '';
+    }
   }
 }]);
 ;app.controller('AuthorizeController',["$scope", "$rootScope", "$localStorage", "$window", "UserService", "$state", "CommonService", "$timeout", "Util", "AdminService", function($scope,$rootScope,$localStorage,$window,UserService,$state,CommonService,$timeout,Util,AdminService){
@@ -1284,9 +1394,14 @@ app.filter('startsWith', function () {
       } while (i < input.length);
       return output;
   };
+  var fetchLocation = function(params) {
+    var response = $http.get(params);
+    return response;
+  };
   return {
       encode                : encode,
-      decode                : decode
+      decode                : decode,
+      fetchLocation         : fetchLocation
   };
 }]);
 app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
@@ -1301,3 +1416,16 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
     };
     return Util;
 }]);
+;app.factory("MainService", ["$http", "$q", "$localStorage", "CONFIG", function ($http, $q, $localStorage,CONFIG) {
+	return{
+	    searchClub : function(obj){
+	      var response = $http({
+	          method: 'POST',
+	          url: CONFIG.HOST_API+'/_PublicClubRegistration',
+	          data:obj,
+	          headers: {'Server': CONFIG.SERVER_PATH}
+	      })
+	      return response;
+	    }
+	}
+ }])
