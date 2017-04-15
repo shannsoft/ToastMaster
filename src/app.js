@@ -276,13 +276,15 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       $rootScope.stateName = toState.name;
       var state = toState.name.split('.');
-      var frmstate = fromState.name.split('.');
-      if(!$rootScope.isFirstLoad){
-        $rootScope.isFirstLoad = true;
-        $timeout(function(){
-          $rootScope.hidePreloader1 = true;
-        },300)
-      }
       $rootScope.is_admin = (state[0] == 'admin') ? true : false;
+      $timeout(function(){
+        var frmstate = fromState.name.split('.');
+        if((state[0] == 'admin' && frmstate[0] != 'admin') || (state[0] != 'admin' && frmstate[0] == 'admin') || (state[0] != 'admin' && frmstate[0] != 'admin')){
+          if(!(state[0] != 'admin' && frmstate[0] != 'admin')) $rootScope.hidePreloader1  = false;
+          $timeout(function(){
+            $rootScope.hidePreloader1 = true;
+          },5000)
+        }
+      })
     })
   });

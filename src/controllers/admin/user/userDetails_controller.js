@@ -119,9 +119,7 @@ app.controller('AssignRollModal', function ($scope,$rootScope, $uibModalInstance
           $rootScope.showPreloader = false;
           if(response.data.StatusCode == 200){
             Util.alertMessage('success',"Successfully Updated");
-            $timeout(function(){
-              $uibModalInstance.close();
-            },5000);
+            $uibModalInstance.close();
           }
           else{
             Util.alertMessage('danger',"Something is wrong please try again");

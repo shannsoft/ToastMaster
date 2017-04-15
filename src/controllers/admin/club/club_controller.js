@@ -248,9 +248,7 @@ app.controller('paymentModalCtrl', function ($scope, $rootScope,$uibModalInstanc
       else {
         Util.alertMessage('danger',res.data.Message);
       }
-      $timeout(function(){
-        $uibModalInstance.close();
-      },3000)
+      $uibModalInstance.close();
     })
   };
   $scope.cancel = function () {
@@ -285,9 +283,7 @@ app.controller('ModalCtrl', function ($scope, $rootScope,$uibModalInstance,meeti
       else {
         Util.alertMessage('danger',res.data.Message);
       }
-      $timeout(function(){
-        $uibModalInstance.close();
-      },3000)
+      $uibModalInstance.close();
     })
   };
   $scope.addImage  = function () {
@@ -302,7 +298,6 @@ app.controller('ModalCtrl', function ($scope, $rootScope,$uibModalInstance,meeti
         "inputStream": $scope.photo.image.split(";base64,")[1]
       }
     }
-    console.log(obj);
     $rootScope.showPreloader = true;
     AdminService.addImage(obj).then(function(res){
       $rootScope.showPreloader = false;
@@ -312,9 +307,7 @@ app.controller('ModalCtrl', function ($scope, $rootScope,$uibModalInstance,meeti
       else {
         Util.alertMessage('danger',res.data.Message);
       }
-      $timeout(function(){
-        $uibModalInstance.close();
-      },3000)
+      $uibModalInstance.close();
     })
   };
 
