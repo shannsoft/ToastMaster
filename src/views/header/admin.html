@@ -17,7 +17,8 @@
 
         <!-- user type login -->
         <li ng-if="loggedIn_user.joinType == '3'"><a href="#"><i class="fa fa-cc-mastercard"></i> <span>Payment Collection</span></a></li>
-        <li ng-if="loggedIn_user.joinType == '3'"><a href="" ng-class="{'active':stateName == 'admin.create-meeting' || stateName == 'admin.meeting-list' || stateName == 'admin.meeting-details'}" ui-sref="admin.meeting-list"><i class="fa fa-laptop"></i> <span> Meeting List </span></a></li>
+        <li ng-if="loggedIn_user.joinType == '3' && loggedIn_user.designationId=='100001'" ><a href="" ng-class="{'active':stateName == 'admin.topic-approval'}" ui-sref="admin.topic-approval"><i class="fa fa-laptop"></i> <span> Topic Approval </span></a></li>
+        <li ng-if="loggedIn_user.joinType == '3'"><a href="" ng-class="{'active':stateName == 'admin.member-meeting-list' || stateName == 'admin.member-meeting-details'}" ui-sref="admin.member-meeting-list"><i class="fa fa-laptop"></i> <span> Meeting List </span></a></li>
       </ul>
     </div>
   </div>

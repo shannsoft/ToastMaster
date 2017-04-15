@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<ul class="nav nav-pills headermenu">
-				<li><a href="" ui-sref="club-registration">Start a Club</a></li>
+					<li ng-if="!signedView"><a href="" ui-sref="club-registration">Start a Club</a></li>
 					<li class="hidden-xs"><a href="" ui-sref="find-club">Find a Club</a></li>
 					<li class="hidden-xs"><a href="" ui-sref="need-help">Need Help</a></li>
 					<li ng-if="!signedView"><a href="" ui-sref="login">Login</a></li>

@@ -1,0 +1,26 @@
+<div class="pageheader">
+  <div class="clearfix" >
+    <h2 class="pull-left"><i class="fa fa-home"></i> Meeting List <span>Subtitle goes here...</span></h2>
+  </div>
+</div>
+<div class="contentpanel" ng-init="loadMeetingList()">
+  <div class="panel panel-default" ng-repeat="meeting in meetingList" ng-if="meeting.status == 'P'">
+    <div class="panel-body">
+      <div class="row ml-wrap">
+        <div class="col-sm-6">
+          <h3>{{meeting.topic}}</h3>
+          <p class="mt30">{{meeting.description}}</p>
+        </div>
+        <div class="col-sm-6">
+          <div class="ml-bg-box">
+            <h3></h3>
+            <div class="clearfix mt30">
+            <button class="btn btn-info" ng-click="approveTopic(meeting.id,'APPROVE_TOPIC')">Approve</button>
+            <button class="btn btn-danger" ng-click="approveTopic(meeting.id,'REJECT_TOPIC')">Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

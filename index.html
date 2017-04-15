@@ -28,7 +28,7 @@
 
 
     <!-- Custom javascript files -->
-    <script src="custom.js?rel=1492168537450"></script>
+    <script src="custom.js?rel=1492261799755"></script>
     <!-- <script src="src/app.js"></script>
     <script src="src/controllers/main_controller.js"></script>
     <script src="src/controllers/home/home_controller.js"></script>
@@ -55,6 +55,12 @@
           margin: -15px 0 0 -15px;
           font-size: 32px;
       }
+      .alert{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 50%;
+      }
     </style>
 
 </head>
@@ -62,12 +68,15 @@
   <div id="preloader" ng-if="showPreloader">
       <div id="status"><i class="fa fa-spinner fa-spin"></i></div>
   </div>
-  <div id="preloader1" ng-if="showPreloader1">
+  <div id="preloader1" ng-if="!hidePreloader1">
       <div id="status"><i class="fa fa-spinner fa-spin"></i></div>
   </div>
   <div ng-include="'src/views/header/header.html'" ng-if="!is_admin"></div>
   <div ui-view></div>
   <div ng-include="'src/views/footer/footer.html'" ng-if="!is_admin"></div>
+  <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}">
+    {{alert.msg}}
+  </div>
 
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAyPOEsucm0X1kbw1HVmE-fEOa2ArhupZg&libraries=places&callback=initGoogle" async defer></script>
   <script type="text/javascript">

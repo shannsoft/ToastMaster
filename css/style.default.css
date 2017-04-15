@@ -3960,8 +3960,18 @@ div.error label.error:before {
 .m-l-10{margin-left:10px;}
 .m-l-20{margin-left:20px;}
 
+.m-t-5{margin-top:5px;}
 .m-t-10{margin-top:10px;}
 .m-t-15{margin-top:15px;}
 .m-t-20{margin-top:20px;}
 .m-t-22{margin-top:22px;}
 .m-t-30{margin-top:30px;}
+.mr-btn{
+  padding: 1px 4px;
+  margin: 0;
+  width: 28px;
+  font-size: 13px;
+}
+.mr-btn i{
+  margin-right: 0px!important;
+}

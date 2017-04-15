@@ -6,10 +6,10 @@
   <div class="col-md-12">
     <div class="panel panel-default">
       <div class="panel-heading">
-      <div class="panel-btns right">
+      <!-- <div class="panel-btns right">
           <button class="btn btn-danger" ng-click="videoModal()">Share Video</button>
           <button class="btn btn-default" ng-click="imageModal()">Upload photos</button>
-      </div>
+      </div> -->
       <h4 class="panel-title">Details</h4>
       </div>
       <div class="panel-body">
@@ -41,25 +41,25 @@
           <div class="people-item mr-box">
             <div class="media">
               <div class="media-body">
-                <h4 class="person-name">{{role.roleName}}</h4>
+              <div class="clearfix">
+                <h4 class="person-name pull-left m-t-5">{{role.roleName}}</h4>
+                <button ng-if="role.showButton" class="btn btn-sm btn-primary pull-right" ng-click="grabRole(role.roleId)">Grab</button>
+                <button ng-if="!role.showButton" class="btn btn-sm btn-danger pull-right" ng-click="cancelRole(role.roleId)">Cancel</button>
               </div>
-              <div class="clearfix m-t-10">
-                  <table class="table table-bordered">
-                    <tbody>
-                      <tr ng-repeat="user in role.userDetails">
-                        <td>{{user.name}}</td>
-                        <td class="text-right " width="30%">
-                          <button ng-if="user.showButton" class="btn btn-primary mr-btn" ng-click="rollApprove(user.roleId,'APPROVE')"><i class="fa fa-check"></i></button>
-                          <button class="btn btn-danger mr-btn" ng-click="rollApprove(user.roleId,'REJECT')"><i class="fa fa-trash"></i></button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div class="clearfix m-t-10">
+                    <span class="badge" ng-repeat="user in role.userDetails">{{user.name}}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-lg-12 m-t-10">
+            <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}">
+              {{alert.msg}}
+            </div>
+        </div>
     </div>
   </div>
 </div>

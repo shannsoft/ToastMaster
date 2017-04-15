@@ -47,13 +47,18 @@ app.controller("ClubController",function($scope,$rootScope,AdminService,Util,$lo
       }
     })
   }
-  $scope.getMeetingRoleTypeInit = function(){
+  $scope.rollApprove = function(rollId,type){
     $rootScope.showPreloader = true;
-    AdminService.getMeetingRoleType().then(function(response){
+    var obj = {
+        "actType": type,
+        "id": rollId,
+        "approveByUserCode": $localStorage.loggedInUser.userId
+      }
+    AdminService.grabRole(obj).then(function(response){
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){
-        $scope.meetingDetails = response.data.Data[0];
-        $scope.meetingRoleTypes = response.data.Data;
+        Util.alertMessage('success',response.data.Message);
+        $scope.loadMeetingDetails();
       }
       else{
         Util.alertMessage('danger',response.data.Message);

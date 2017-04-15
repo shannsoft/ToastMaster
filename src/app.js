@@ -169,6 +169,22 @@ app.config(function($stateProvider, $urlRouterProvider) {
           loggedout: checkLoggedout
       }
     })
+    .state('admin.member-meeting-list', {
+      url: '/member-meeting-list',
+      templateUrl: 'admin/member/meeting-list.html',
+      controller : 'MemberController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
+    .state('admin.member-meeting-details', {
+      url: '/member-meeting-details/:meetingid',
+      templateUrl: 'admin/member/meeting-details.html',
+      controller : 'MemberController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
     .state('admin.create-meeting', {
       url: '/create-meeting',
       templateUrl: 'admin/club/create-meeting.html',
@@ -217,6 +233,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
           loggedout: checkLoggedout
       }
     })
+    .state('admin.topic-approval', {
+      url: '/topic-approval',
+      templateUrl: 'admin/member/topic-approve.html',
+      controller : 'MemberController',
+      resolve: {
+          loggedout: checkLoggedout
+      }
+    })
 
     function checkLoggedout($q, $timeout, $http, $location, $rootScope, $state, $localStorage) {
         var deferred = $q.defer();
@@ -253,10 +277,10 @@ app.config(function($stateProvider, $urlRouterProvider) {
       $rootScope.stateName = toState.name;
       var state = toState.name.split('.');
       var frmstate = fromState.name.split('.');
-      if((state[0] == 'admin' && frmstate[0] != 'admin') || (state[0] != 'admin' && frmstate[0] == 'admin')){
-        $rootScope.showPreloader1 = true;
+      if(!$rootScope.isFirstLoad){
+        $rootScope.isFirstLoad = true;
         $timeout(function(){
-          $rootScope.showPreloader1 = false;
+          $rootScope.hidePreloader1 = true;
         },300)
       }
       $rootScope.is_admin = (state[0] == 'admin') ? true : false;

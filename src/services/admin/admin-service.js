@@ -59,6 +59,14 @@ app.factory("AdminService", function ($http, $q, $localStorage,CONFIG) {
       })
       return response;
     },
+    memberMeetingList : function(id){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.HOST_API+'/_meeting?type=GET_ALL_CLUB_MEETING&clubId='+id,
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
     meetingDetails: function(id){
       var response = $http({
           method: 'GET',
@@ -161,6 +169,24 @@ app.factory("AdminService", function ($http, $q, $localStorage,CONFIG) {
           method: 'POST',
           data:obj,
           url: CONFIG.HOST_API+'/_MeetingExpenses',
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    topicApproval: function(obj){
+      var response = $http({
+          method: 'POST',
+          data:obj,
+          url: CONFIG.HOST_API+'/_Meeting',
+          headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    },
+    grabRole: function(obj){
+      var response = $http({
+          method: 'POST',
+          data:obj,
+          url: CONFIG.HOST_API+'/_MeetingRole',
           headers: {'tokenId':$localStorage.loggedInUser.tokenId,'Server': CONFIG.SERVER_PATH}
       })
       return response;

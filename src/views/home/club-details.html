@@ -15,33 +15,33 @@
 					<h3>Proffessional Details</h3>
 					<img ng-src="{{clubDetails.photo}}" height="360" />
 					<div class="profile-info">
-						<table class="table"> 
-							<tbody> 
-								<tr> 
-									<th scope="row">Name</th> 
+						<table class="table">
+							<tbody>
+								<tr>
+									<th scope="row">Name</th>
 									<td>{{clubDetails.clubName}}</td>
-								</tr> 
-								<tr> 
-									<th scope="row">Email</th> 
-									<td>{{clubDetails.email}}</td> 
 								</tr>
-								<tr> 
-									<th scope="row">Owner</th> 
-									<td>{{clubDetails.fName+" "+clubDetails.lName}}</td> 
+								<tr>
+									<th scope="row">Email</th>
+									<td>{{clubDetails.email}}</td>
 								</tr>
-								<tr> 
-									<th scope="row">Location</th> 
-									<td>{{clubDetails.address}}</td> 
+								<tr>
+									<th scope="row">Owner</th>
+									<td>{{clubDetails.fName+" "+clubDetails.lName}}</td>
 								</tr>
-								<tr> 
-									<th scope="row">Phone</th> 
-									<td>{{clubDetails.phone}}</td> 
+								<tr>
+									<th scope="row">Location</th>
+									<td>{{clubDetails.address}}</td>
 								</tr>
-								<tr> 
-									<th scope="row">Reg Date</th> 
-									<td>{{clubDetails.regdDate}}</td> 
+								<tr>
+									<th scope="row">Phone</th>
+									<td>{{clubDetails.phone}}</td>
 								</tr>
-							</tbody> 
+								<tr>
+									<th scope="row">Reg Date</th>
+									<td>{{clubDetails.regdDate}}</td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 				</div>
@@ -57,11 +57,11 @@
 						<h3>Journey Highlights:</h3>
 						<hr/>
 						<p class="testim">“Toastmasters accepts you for who you are, and helps <br/>you become whatever you aspire to be.”</p>
-						<button class="btn btn-primary" type="button" ui-sref="member-registration({clubid:clubDetails.userCode})">Join as a member</button>
+						<button ng-if="!signedView" class="btn btn-primary" type="button" ui-sref="member-registration({clubid:clubDetails.userCode})">Join as a member</button>
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 	</div>
 </section>
