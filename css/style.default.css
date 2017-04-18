@@ -2429,6 +2429,14 @@ div.error label.error:before {
 }
 
 .letter-list li a:hover {
+   color: #fff;
+   background: #428BCA;
+   text-decoration: none;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   border-radius: 3px;
+}
+.letter-list li a.active {
 	color: #fff;
 	background: #428BCA;
 	text-decoration: none;

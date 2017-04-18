@@ -4,6 +4,7 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
   var googleTime;
   $scope.map = {};
   $scope.type = '';
+  $scope.filterBy = "A";
   /***********************************************************/
   /*****************show the location on map******************/
   /***********************************************************/
@@ -48,6 +49,9 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200)
         $scope.userList = response.data.Data;
+        if($scope.userList.length > 0){
+          $scope.filterBy = $scope.userList[0].fName.substring(0, 1).toUpperCase();
+        }
     })
   }
   /***********************************************************/
@@ -102,6 +106,9 @@ app.controller('UserDetailsController',function($scope,$rootScope,$localStorage,
             }
         }
     });
+  }
+   $scope.filter = function(letter){
+    $scope.filterBy = letter;
   }
 });
 app.controller('AssignRollModal', function ($scope,$rootScope, $uibModalInstance,designationList,AdminService,$localStorage,userCode,Util,$timeout) {

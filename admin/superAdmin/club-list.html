@@ -4,37 +4,37 @@
 <div class="contentpanel" ng-init="loadUserList('GET_ALL_CLUB')">
 	<div class="container-fluid">
 		<ul class="letter-list">
-			<li><a href="#">a</a></li>
-			<li><a href="#">b</a></li>
-			<li><a href="#">c</a></li>
-			<li><a href="#">d</a></li>
-			<li><a href="#">e</a></li>
-			<li><a href="#">f</a></li>
-			<li><a href="#">g</a></li>
-			<li><a href="#">h</a></li>
-			<li><a href="#">i</a></li>
-			<li><a href="#">j</a></li>
-			<li><a href="#">k</a></li>
-			<li><a href="#">l</a></li>
-			<li><a href="#">m</a></li>
-			<li><a href="#">n</a></li>
-			<li><a href="#">o</a></li>
-			<li><a href="#">p</a></li>
-			<li><a href="#">q</a></li>
-			<li><a href="#">r</a></li>
-			<li><a href="#">s</a></li>
-			<li><a href="#">t</a></li>
-			<li><a href="#">u</a></li>
-			<li><a href="#">v</a></li>
-			<li><a href="#">w</a></li>
-			<li><a href="#">x</a></li>
-			<li><a href="#">y</a></li>
-			<li><a href="#">z</a></li>
+			<li><a ng-class="{'active':filterBy=='A'}" href="" ng-click="filter('A')">a</a></li>
+			<li><a ng-class="{'active':filterBy=='B'}" href="" ng-click="filter('B')">b</a></li>
+			<li><a ng-class="{'active':filterBy=='C'}" href="" ng-click="filter('C')">c</a></li>
+			<li><a ng-class="{'active':filterBy=='D'}" href="" ng-click="filter('D')">d</a></li>
+			<li><a ng-class="{'active':filterBy=='E'}" href="" ng-click="filter('E')">e</a></li>
+			<li><a ng-class="{'active':filterBy=='F'}" href="" ng-click="filter('F')">f</a></li>
+			<li><a ng-class="{'active':filterBy=='G'}" href="" ng-click="filter('G')">g</a></li>
+			<li><a ng-class="{'active':filterBy=='H'}" href="" ng-click="filter('H')">h</a></li>
+			<li><a ng-class="{'active':filterBy=='I'}" href="" ng-click="filter('I')">i</a></li>
+			<li><a ng-class="{'active':filterBy=='J'}" href="" ng-click="filter('J')">j</a></li>
+			<li><a ng-class="{'active':filterBy=='K'}" href="" ng-click="filter('K')">k</a></li>
+			<li><a ng-class="{'active':filterBy=='L'}" href="" ng-click="filter('L')">l</a></li>
+			<li><a ng-class="{'active':filterBy=='M'}" href="" ng-click="filter('M')">m</a></li>
+			<li><a ng-class="{'active':filterBy=='N'}" href="" ng-click="filter('N')">n</a></li>
+			<li><a ng-class="{'active':filterBy=='O'}" href="" ng-click="filter('O')">o</a></li>
+			<li><a ng-class="{'active':filterBy=='P'}" href="" ng-click="filter('P')">p</a></li>
+			<li><a ng-class="{'active':filterBy=='Q'}" href="" ng-click="filter('Q')">q</a></li>
+			<li><a ng-class="{'active':filterBy=='R'}" href="" ng-click="filter('R')">r</a></li>
+			<li><a ng-class="{'active':filterBy=='S'}" href="" ng-click="filter('S')">s</a></li>
+			<li><a ng-class="{'active':filterBy=='T'}" href="" ng-click="filter('T')">t</a></li>
+			<li><a ng-class="{'active':filterBy=='U'}" href="" ng-click="filter('U')">u</a></li>
+			<li><a ng-class="{'active':filterBy=='V'}" href="" ng-click="filter('V')">v</a></li>
+			<li><a ng-class="{'active':filterBy=='W'}" href="" ng-click="filter('W')">w</a></li>
+			<li><a ng-class="{'active':filterBy=='X'}" href="" ng-click="filter('X')">x</a></li>
+			<li><a ng-class="{'active':filterBy=='Y'}" href="" ng-click="filter('Y')">y</a></li>
+			<li><a ng-class="{'active':filterBy=='Z'}" href="" ng-click="filter('Z')">z</a></li>
     </ul>
     <div class="mb30"></div>
     <div class="people-list">
       <div class="row">
-        <div class="col-md-6" ng-repeat="club in userList" ng-if="club.isApproved">
+        <div class="col-md-6" ng-repeat="club in userList | startsWith:filterBy" ng-if="club.isApproved">
           <div class="people-item">
             <div class="media">
               <a href="" class="pull-left">
